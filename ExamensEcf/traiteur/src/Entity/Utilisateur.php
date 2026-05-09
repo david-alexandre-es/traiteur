@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\RoleEnum;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -41,9 +42,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $adresse_postale = null;
 
-    #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Role $role = null;
+    #[ORM\Column(type: 'string', enumType: RoleEnum::class)]
+    private RoleEnum $role = RoleEnum::UTILISATEUR;
 
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Avis::class, orphanRemoval: true)]
     private Collection $avis;
@@ -66,12 +66,7 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        $roles = [];
-        if ($this->role) {
-            $roles[] = 'ROLE_' . strtoupper($this->role->getLibelle());
-        }
-        $roles[] = 'ROLE_USER';
-        return array_unique($roles);
+        return [$this->role->value, 'ROLE_USER'];
     }
 
     public function getPassword(): ?string { return $this->password; }
@@ -97,8 +92,8 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function getAdressePostale(): ?string { return $this->adresse_postale; }
     public function setAdressePostale(?string $adresse_postale): static { $this->adresse_postale = $adresse_postale; return $this; }
 
-    public function getRole(): ?Role { return $this->role; }
-    public function setRole(?Role $role): static { $this->role = $role; return $this; }
+    public function getRole(): RoleEnum { return $this->role; }
+    public function setRole(RoleEnum $role): static { $this->role = $role; return $this; }
 
     public function getAvis(): Collection { return $this->avis; }
     public function getCommandes(): Collection { return $this->commandes; }
