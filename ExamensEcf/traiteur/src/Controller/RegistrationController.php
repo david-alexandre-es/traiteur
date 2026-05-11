@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
-use App\Entity\Role;
+use App\Enum\RoleEnum;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,9 +29,8 @@ class RegistrationController extends AbstractController
                 $passwordHasher->hashPassword($utilisateur, $form->get('plainPassword')->getData())
             );
 
-            // Assigner le rôle "utilisateur" par défaut
-            $role = $entityManager->getRepository(Role::class)->findOneBy(['libelle' => 'utilisateur']);
-            $utilisateur->setRole($role);
+            // Assigner le rôle utilisateur par défaut
+            $utilisateur->setRole(RoleEnum::UTILISATEUR);
 
             $entityManager->persist($utilisateur);
             $entityManager->flush();
