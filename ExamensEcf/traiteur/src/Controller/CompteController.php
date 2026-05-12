@@ -75,4 +75,21 @@ public function nouvelAvis(Request $request, EntityManagerInterface $em): Respon
         'form' => $form,
     ]);
 }
+#[Route('/profil', name: 'app_profil')]
+public function profil(Request $request, EntityManagerInterface $em): Response
+{
+    $utilisateur = $this->getUser();
+    $form = $this->createForm(\App\Form\ProfilType::class, $utilisateur);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $em->flush();
+        $this->addFlash('success', 'Profil mis à jour avec succès !');
+        return $this->redirectToRoute('app_profil');
+    }
+
+    return $this->render('compte/profil.html.twig', [
+        'form' => $form,
+    ]);
+}
 }
