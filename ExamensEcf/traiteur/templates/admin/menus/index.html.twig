@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des menus{% endblock %}
+
+{% block body %}
+<h1>Gestion des menus</h1>
+
+<a href="{{ path('app_admin_menu_nouveau') }}">+ Nouveau menu</a>
+
+{% for message in app.flashes('success') %}
+    <div style="color: green">{{ message }}</div>
+{% endfor %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Prix/personne</th>
+            <th>Thème</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for menu in menus %}
+        <tr>
+            <td>{{ menu.titre }}</td>
+            <td>{{ menu.prixParPersonne }} €</td>
+            <td>{{ menu.theme.libelle }}</td>
+            <td>
+                <a href="{{ path('app_admin_menu_modifier', {id: menu.id}) }}">Modifier</a>
+                <form method="post" action="{{ path('app_admin_menu_supprimer', {id: menu.id}) }}" style="display:inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ menu.id) }}">
+                    <button type="submit" onclick="return confirm('Supprimer ce menu ?')">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_admin') }}">← Retour</a>
+{% endblock %}
