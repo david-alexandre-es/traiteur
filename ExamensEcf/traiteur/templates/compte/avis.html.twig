@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Laisser un avis{% endblock %}
+
+{% block body %}
+<h1>Laisser un avis</h1>
+
+{{ form_start(form) }}
+    {{ form_row(form.note) }}
+    {{ form_row(form.description) }}
+
+    <button type="submit">Envoyer mon avis</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_compte') }}">← Retour</a>
+{% endblock %}

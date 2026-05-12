@@ -53,4 +53,26 @@ class CompteController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/avis/nouveau', name: 'app_avis_nouveau')]
+public function nouvelAvis(Request $request, EntityManagerInterface $em): Response
+{
+    $avis = new \App\Entity\Avis();
+    $form = $this->createForm(\App\Form\AvisType::class, $avis);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $avis->setStatut('en_attente');
+        $avis->setUtilisateur($this->getUser());
+
+        $em->persist($avis);
+        $em->flush();
+
+        $this->addFlash('success', 'Votre avis a été soumis et sera validé prochainement !');
+        return $this->redirectToRoute('app_compte');
+    }
+
+    return $this->render('compte/avis.html.twig', [
+        'form' => $form,
+    ]);
+}
 }

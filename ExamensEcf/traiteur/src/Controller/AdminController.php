@@ -149,4 +149,29 @@ public function changerStatut(\App\Entity\Commande $commande, Request $request, 
     $this->addFlash('success', 'Statut mis à jour !');
     return $this->redirectToRoute('app_admin_commandes');
 }
+#[Route('/avis', name: 'app_admin_avis')]
+public function avis(\App\Repository\AvisRepository $avisRepository): Response
+{
+    return $this->render('admin/avis/index.html.twig', [
+        'avis' => $avisRepository->findAll(),
+    ]);
+}
+
+#[Route('/avis/{id}/valider', name: 'app_admin_avis_valider', methods: ['POST'])]
+public function validerAvis(\App\Entity\Avis $avis, EntityManagerInterface $em): Response
+{
+    $avis->setStatut('valide');
+    $em->flush();
+    $this->addFlash('success', 'Avis validé !');
+    return $this->redirectToRoute('app_admin_avis');
+}
+
+#[Route('/avis/{id}/rejeter', name: 'app_admin_avis_rejeter', methods: ['POST'])]
+public function rejeterAvis(\App\Entity\Avis $avis, EntityManagerInterface $em): Response
+{
+    $avis->setStatut('rejete');
+    $em->flush();
+    $this->addFlash('success', 'Avis rejeté !');
+    return $this->redirectToRoute('app_admin_avis');
+}
 }

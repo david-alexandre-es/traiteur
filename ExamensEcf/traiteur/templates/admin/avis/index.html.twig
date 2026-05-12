@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des avis{% endblock %}
+
+{% block body %}
+<h1>Gestion des avis</h1>
+
+{% for message in app.flashes('success') %}
+    <div style="color: green">{{ message }}</div>
+{% endfor %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Note</th>
+            <th>Avis</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for avis in avis %}
+        <tr>
+            <td>{{ avis.utilisateur.prenom }} {{ avis.utilisateur.nom }}</td>
+            <td>{{ avis.note }}/5</td>
+            <td>{{ avis.description }}</td>
+            <td>{{ avis.statut }}</td>
+            <td>
+                {% if avis.statut == 'en_attente' %}
+                    <form method="post" action="{{ path('app_admin_avis_valider', {id: avis.id}) }}" style="display:inline">
+                        <button type="submit">Valider</button>
+                    </form>
+                    <form method="post" action="{{ path('app_admin_avis_rejeter', {id: avis.id}) }}" style="display:inline">
+                        <button type="submit">Rejeter</button>
+                    </form>
+                {% else %}
+                    {{ avis.statut }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_admin') }}">← Retour</a>
+{% endblock %}
