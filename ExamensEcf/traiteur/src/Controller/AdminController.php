@@ -131,4 +131,22 @@ public function supprimerPlat(\App\Entity\Plat $plat, EntityManagerInterface $em
     $this->addFlash('success', 'Plat supprimé avec succès !');
     return $this->redirectToRoute('app_admin_plats');
 }
+
+#[Route('/commandes', name: 'app_admin_commandes')]
+public function commandes(\App\Repository\CommandeRepository $commandeRepository): Response
+{
+    return $this->render('admin/commandes/index.html.twig', [
+        'commandes' => $commandeRepository->findAll(),
+    ]);
+}
+
+#[Route('/commandes/{id}/statut', name: 'app_admin_commande_statut', methods: ['POST'])]
+public function changerStatut(\App\Entity\Commande $commande, Request $request, EntityManagerInterface $em): Response
+{
+    $statut = $request->request->get('statut');
+    $commande->setStatut($statut);
+    $em->flush();
+    $this->addFlash('success', 'Statut mis à jour !');
+    return $this->redirectToRoute('app_admin_commandes');
+}
 }
