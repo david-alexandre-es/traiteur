@@ -40,4 +40,23 @@ class MenuRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findByFilters(?string $theme, ?string $regime): array
+{
+    $qb = $this->createQueryBuilder('m')
+        ->leftJoin('m.theme', 't')
+        ->leftJoin('m.regimes', 'r')
+        ->addSelect('t', 'r');
+
+    if ($theme) {
+        $qb->andWhere('t.id = :theme')
+           ->setParameter('theme', $theme);
+    }
+
+    if ($regime) {
+        $qb->andWhere('r.id = :regime')
+           ->setParameter('regime', $regime);
+    }
+
+    return $qb->getQuery()->getResult();
+}
 }

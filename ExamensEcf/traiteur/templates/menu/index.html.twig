@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Menus{% endblock %}
+
+{% block body %}
+<h1>Nos Menus</h1>
+
+{# Filtres #}
+<form method="get" action="{{ path('app_menus') }}">
+    <select name="theme">
+        <option value="">Tous les thèmes</option>
+        {% for theme in themes %}
+            <option value="{{ theme.id }}" {% if selectedTheme == theme.id ~ '' %}selected{% endif %}>
+                {{ theme.libelle }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="regime">
+        <option value="">Tous les régimes</option>
+        {% for regime in regimes %}
+            <option value="{{ regime.id }}"{% if selectedRegime == regime.id ~ '' %}selected{% endif %}>
+                {{ regime.libelle }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filtrer</button>
+    <a href="{{ path('app_menus') }}">Réinitialiser</a>
+</form>
+
+{# Liste des menus #}
+{% if menus is empty %}
+    <p>Aucun menu trouvé.</p>
+{% else %}
+    {% for menu in menus %}
+        <div>
+            <h2>{{ menu.titre }}</h2>
+            <p>{{ menu.description }}</p>
+            <p>Prix : {{ menu.prixParPersonne }} €</p>
+            <p>Thème : {{ menu.theme.libelle }}</p>
+            <p>
+                Régimes :
+                {% for regime in menu.regimes %}
+                    {{ regime.libelle }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            {% if app.user %}
+                <a href="#">Commander</a>
+            {% else %}
+                <a href="{{ path('app_login') }}">Connectez-vous pour commander</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}
