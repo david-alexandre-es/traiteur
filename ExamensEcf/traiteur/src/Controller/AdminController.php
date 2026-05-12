@@ -174,4 +174,30 @@ public function rejeterAvis(\App\Entity\Avis $avis, EntityManagerInterface $em):
     $this->addFlash('success', 'Avis rejeté !');
     return $this->redirectToRoute('app_admin_avis');
 }
+#[Route('/utilisateurs', name: 'app_admin_utilisateurs')]
+public function utilisateurs(\App\Repository\UtilisateurRepository $utilisateurRepository): Response
+{
+    return $this->render('admin/utilisateurs/index.html.twig', [
+        'utilisateurs' => $utilisateurRepository->findAll(),
+    ]);
+}
+
+#[Route('/utilisateurs/{id}/role', name: 'app_admin_utilisateur_role', methods: ['POST'])]
+public function changerRole(\App\Entity\Utilisateur $utilisateur, Request $request, EntityManagerInterface $em): Response
+{
+    $role = $request->request->get('role');
+    $utilisateur->setRole(\App\Enum\RoleEnum::from($role));
+    $em->flush();
+    $this->addFlash('success', 'Rôle mis à jour !');
+    return $this->redirectToRoute('app_admin_utilisateurs');
+}
+
+#[Route('/utilisateurs/{id}/supprimer', name: 'app_admin_utilisateur_supprimer', methods: ['POST'])]
+public function supprimerUtilisateur(\App\Entity\Utilisateur $utilisateur, EntityManagerInterface $em): Response
+{
+    $em->remove($utilisateur);
+    $em->flush();
+    $this->addFlash('success', 'Utilisateur supprimé !');
+    return $this->redirectToRoute('app_admin_utilisateurs');
+}
 }
