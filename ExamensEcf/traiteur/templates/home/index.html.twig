@@ -5,4 +5,19 @@
 {% block body %}
 <h1>Bienvenue chez notre Traiteur</h1>
 <p>Découvrez nos menus et prestations.</p>
+
+<a href="{{ path('app_menus') }}">Voir nos menus</a>
+
+<h2>Avis de nos clients</h2>
+{% if avis is empty %}
+    <p>Aucun avis pour le moment.</p>
+{% else %}
+    {% for a in avis %}
+        <div>
+            <strong>{{ a.utilisateur.prenom }} {{ a.utilisateur.nom }}</strong>
+            <span>{{ a.note }}/5 ⭐</span>
+            <p>{{ a.description }}</p>
+        </div>
+    {% endfor %}
+{% endif %}
 {% endblock %}
