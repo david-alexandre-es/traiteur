@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des allergènes{% endblock %}
+
+{% block body %}
+<h1>Gestion des allergènes</h1>
+
+<a href="{{ path('app_admin_allergene_nouveau') }}">+ Nouvel allergène</a>
+
+{% for message in app.flashes('success') %}
+    <div style="color: green">{{ message }}</div>
+{% endfor %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for allergene in allergenes %}
+        <tr>
+            <td>{{ allergene.libelle }}</td>
+            <td>
+                <form method="post" action="{{ path('app_admin_allergene_supprimer', {id: allergene.id}) }}" style="display:inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ allergene.id) }}">
+                    <button type="submit" onclick="return confirm('Supprimer cet allergène ?')">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_admin') }}">← Retour</a>
+{% endblock %}

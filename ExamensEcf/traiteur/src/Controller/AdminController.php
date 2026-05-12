@@ -200,4 +200,40 @@ public function supprimerUtilisateur(\App\Entity\Utilisateur $utilisateur, Entit
     $this->addFlash('success', 'Utilisateur supprimé !');
     return $this->redirectToRoute('app_admin_utilisateurs');
 }
+#[Route('/allergenes', name: 'app_admin_allergenes')]
+public function allergenes(\App\Repository\AllergeneRepository $allergeneRepository): Response
+{
+    return $this->render('admin/allergenes/index.html.twig', [
+        'allergenes' => $allergeneRepository->findAll(),
+    ]);
+}
+
+#[Route('/allergenes/nouveau', name: 'app_admin_allergene_nouveau')]
+public function nouveauAllergene(Request $request, EntityManagerInterface $em): Response
+{
+    $allergene = new \App\Entity\Allergene();
+    $form = $this->createForm(\App\Form\AllergeneType::class, $allergene);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $em->persist($allergene);
+        $em->flush();
+        $this->addFlash('success', 'Allergène créé !');
+        return $this->redirectToRoute('app_admin_allergenes');
+    }
+
+    return $this->render('admin/allergenes/form.html.twig', [
+        'form' => $form,
+        'titre' => 'Nouvel allergène',
+    ]);
+}
+
+#[Route('/allergenes/{id}/supprimer', name: 'app_admin_allergene_supprimer', methods: ['POST'])]
+public function supprimerAllergene(\App\Entity\Allergene $allergene, EntityManagerInterface $em): Response
+{
+    $em->remove($allergene);
+    $em->flush();
+    $this->addFlash('success', 'Allergène supprimé !');
+    return $this->redirectToRoute('app_admin_allergenes');
+}
 }
