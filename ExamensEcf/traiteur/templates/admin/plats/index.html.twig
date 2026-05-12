@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des plats{% endblock %}
+
+{% block body %}
+<h1>Gestion des plats</h1>
+
+<a href="{{ path('app_admin_plat_nouveau') }}">+ Nouveau plat</a>
+
+{% for message in app.flashes('success') %}
+    <div style="color: green">{{ message }}</div>
+{% endfor %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Note</th>
+            <th>Allergènes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for plat in plats %}
+        <tr>
+            <td>{{ plat.titrePlat }}</td>
+            <td>{{ plat.note }}</td>
+            <td>
+                {% for allergene in plat.allergenes %}
+                    {{ allergene.libelle }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{{ path('app_admin_plat_modifier', {id: plat.id}) }}">Modifier</a>
+                <form method="post" action="{{ path('app_admin_plat_supprimer', {id: plat.id}) }}" style="display:inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plat.id) }}">
+                    <button type="submit" onclick="return confirm('Supprimer ce plat ?')">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_admin') }}">← Retour</a>
+{% endblock %}

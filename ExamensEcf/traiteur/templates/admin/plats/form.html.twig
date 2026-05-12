@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ titre }}{% endblock %}
+
+{% block body %}
+<h1>{{ titre }}</h1>
+
+{{ form_start(form) }}
+    {{ form_row(form.titre_plat) }}
+    {{ form_row(form.note) }}
+    {{ form_row(form.allergenes) }}
+
+    <button type="submit">Enregistrer</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_admin_plats') }}">← Retour</a>
+{% endblock %}
