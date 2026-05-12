@@ -6,8 +6,46 @@
 <h1>Espace Employé</h1>
 <p>Bienvenue {{ app.user.prenom }} {{ app.user.nom }} !</p>
 
-<ul>
-    <li><a href="#">Gérer les commandes</a></li>
-    <li><a href="#">Voir le planning</a></li>
-</ul>
+{% for message in app.flashes('success') %}
+    <div style="color: green">{{ message }}</div>
+{% endfor %}
+
+<h2>Commandes à traiter</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Client</th>
+            <th>Menu</th>
+            <th>Date prestation</th>
+            <th>Personnes</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for commande in commandes %}
+        <tr>
+            <td>{{ commande.numeroCommande }}</td>
+            <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
+            <td>{{ commande.menu.titre }}</td>
+            <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
+            <td>{{ commande.nombrePersonne }}</td>
+            <td>{{ commande.statut }}</td>
+            <td>
+                <form method="post" action="{{ path('app_employe_commande_statut', {id: commande.id}) }}">
+                    <select name="statut">
+                        <option value="en_attente" {% if commande.statut == 'en_attente' %}selected{% endif %}>En attente</option>
+                        <option value="confirmee" {% if commande.statut == 'confirmee' %}selected{% endif %}>Confirmée</option>
+                        <option value="en_preparation" {% if commande.statut == 'en_preparation' %}selected{% endif %}>En préparation</option>
+                        <option value="livree" {% if commande.statut == 'livree' %}selected{% endif %}>Livrée</option>
+                        <option value="annulee" {% if commande.statut == 'annulee' %}selected{% endif %}>Annulée</option>
+                    </select>
+                    <button type="submit">Mettre à jour</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
