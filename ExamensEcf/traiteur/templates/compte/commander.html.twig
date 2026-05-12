@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Passer une commande{% endblock %}
+
+{% block body %}
+<h1>Passer une commande</h1>
+
+{{ form_start(form) }}
+    {{ form_row(form.menu) }}
+    {{ form_row(form.date_prestation) }}
+    {{ form_row(form.heure_livraison) }}
+    {{ form_row(form.nombre_personne) }}
+
+    <button type="submit">Commander</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_compte') }}">← Retour</a>
+{% endblock %}
