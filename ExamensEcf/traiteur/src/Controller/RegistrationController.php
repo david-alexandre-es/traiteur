@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Utilisateur;
 use App\Enum\RoleEnum;
 use App\Form\RegistrationFormType;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,8 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        MailService $mailService
     ): Response {
         $utilisateur = new Utilisateur();
         $form = $this->createForm(RegistrationFormType::class, $utilisateur);
@@ -29,11 +31,13 @@ class RegistrationController extends AbstractController
                 $passwordHasher->hashPassword($utilisateur, $form->get('plainPassword')->getData())
             );
 
-            // Assigner le rôle utilisateur par défaut
             $utilisateur->setRole(RoleEnum::UTILISATEUR);
 
             $entityManager->persist($utilisateur);
             $entityManager->flush();
+
+            // Envoi du mail de bienvenue
+            $mailService->envoyerMailBienvenue($utilisateur);
 
             return $this->redirectToRoute('app_login');
         }

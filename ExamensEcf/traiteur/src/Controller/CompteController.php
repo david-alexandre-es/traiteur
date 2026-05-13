@@ -6,6 +6,7 @@ use App\Entity\Commande;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
 use App\Repository\MenuRepository;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,11 +29,10 @@ class CompteController extends AbstractController
     }
 
     #[Route('/commander', name: 'app_commander')]
-    public function commander(Request $request, EntityManagerInterface $em, MenuRepository $menuRepository): Response
+    public function commander(Request $request, EntityManagerInterface $em, MenuRepository $menuRepository, MailService $mailService): Response
     {
         $commande = new Commande();
 
-        // Pré-remplir le menu si passé en paramètre
         $menuId = $request->query->get('menu');
         if ($menuId) {
             $menu = $menuRepository->find($menuId);
@@ -55,6 +55,8 @@ class CompteController extends AbstractController
 
             $em->persist($commande);
             $em->flush();
+
+            $mailService->envoyerConfirmationCommande($commande);
 
             $this->addFlash('success', 'Votre commande a été passée avec succès !');
             return $this->redirectToRoute('app_compte');
