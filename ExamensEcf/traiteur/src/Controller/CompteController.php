@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Commande;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
+use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +28,19 @@ class CompteController extends AbstractController
     }
 
     #[Route('/commander', name: 'app_commander')]
-    public function commander(Request $request, EntityManagerInterface $em): Response
+    public function commander(Request $request, EntityManagerInterface $em, MenuRepository $menuRepository): Response
     {
         $commande = new Commande();
+
+        // Pré-remplir le menu si passé en paramètre
+        $menuId = $request->query->get('menu');
+        if ($menuId) {
+            $menu = $menuRepository->find($menuId);
+            if ($menu) {
+                $commande->setMenu($menu);
+            }
+        }
+
         $form = $this->createForm(CommandeType::class, $commande);
         $form->handleRequest($request);
 
@@ -53,43 +64,45 @@ class CompteController extends AbstractController
             'form' => $form,
         ]);
     }
+
     #[Route('/avis/nouveau', name: 'app_avis_nouveau')]
-public function nouvelAvis(Request $request, EntityManagerInterface $em): Response
-{
-    $avis = new \App\Entity\Avis();
-    $form = $this->createForm(\App\Form\AvisType::class, $avis);
-    $form->handleRequest($request);
+    public function nouvelAvis(Request $request, EntityManagerInterface $em): Response
+    {
+        $avis = new \App\Entity\Avis();
+        $form = $this->createForm(\App\Form\AvisType::class, $avis);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $avis->setStatut('en_attente');
-        $avis->setUtilisateur($this->getUser());
+        if ($form->isSubmitted() && $form->isValid()) {
+            $avis->setStatut('en_attente');
+            $avis->setUtilisateur($this->getUser());
 
-        $em->persist($avis);
-        $em->flush();
+            $em->persist($avis);
+            $em->flush();
 
-        $this->addFlash('success', 'Votre avis a été soumis et sera validé prochainement !');
-        return $this->redirectToRoute('app_compte');
+            $this->addFlash('success', 'Votre avis a été soumis et sera validé prochainement !');
+            return $this->redirectToRoute('app_compte');
+        }
+
+        return $this->render('compte/avis.html.twig', [
+            'form' => $form,
+        ]);
     }
 
-    return $this->render('compte/avis.html.twig', [
-        'form' => $form,
-    ]);
-}
-#[Route('/profil', name: 'app_profil')]
-public function profil(Request $request, EntityManagerInterface $em): Response
-{
-    $utilisateur = $this->getUser();
-    $form = $this->createForm(\App\Form\ProfilType::class, $utilisateur);
-    $form->handleRequest($request);
+    #[Route('/profil', name: 'app_profil')]
+    public function profil(Request $request, EntityManagerInterface $em): Response
+    {
+        $utilisateur = $this->getUser();
+        $form = $this->createForm(\App\Form\ProfilType::class, $utilisateur);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $em->flush();
-        $this->addFlash('success', 'Profil mis à jour avec succès !');
-        return $this->redirectToRoute('app_profil');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Profil mis à jour avec succès !');
+            return $this->redirectToRoute('app_profil');
+        }
+
+        return $this->render('compte/profil.html.twig', [
+            'form' => $form,
+        ]);
     }
-
-    return $this->render('compte/profil.html.twig', [
-        'form' => $form,
-    ]);
-}
 }

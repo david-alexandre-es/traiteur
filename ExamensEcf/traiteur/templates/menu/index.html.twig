@@ -19,7 +19,7 @@
     <select name="regime">
         <option value="">Tous les régimes</option>
         {% for regime in regimes %}
-            <option value="{{ regime.id }}"{% if selectedRegime == regime.id ~ '' %}selected{% endif %}>
+            <option value="{{ regime.id }}" {% if selectedRegime == regime.id ~ '' %}selected{% endif %}>
                 {{ regime.libelle }}
             </option>
         {% endfor %}
@@ -37,7 +37,8 @@
         <div>
             <h2>{{ menu.titre }}</h2>
             <p>{{ menu.description }}</p>
-            <p>Prix : {{ menu.prixParPersonne }} €</p>
+            <p>Prix : {{ menu.prixParPersonne }} € / personne</p>
+            <p>Minimum : {{ menu.nombrePersonneMinimum }} personnes</p>
             <p>Thème : {{ menu.theme.libelle }}</p>
             <p>
                 Régimes :
@@ -45,11 +46,7 @@
                     {{ regime.libelle }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             </p>
-            {% if app.user %}
-                <a href="#">Commander</a>
-            {% else %}
-                <a href="{{ path('app_login') }}">Connectez-vous pour commander</a>
-            {% endif %}
+            <a href="{{ path('app_menu_detail', {id: menu.id}) }}">Voir le détail</a>
         </div>
     {% endfor %}
 {% endif %}

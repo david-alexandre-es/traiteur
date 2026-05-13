@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ menu.titre }}{% endblock %}
+
+{% block body %}
+<h1>{{ menu.titre }}</h1>
+
+<p>{{ menu.description }}</p>
+<p><strong>Prix par personne :</strong> {{ menu.prixParPersonne }} €</p>
+<p><strong>Nombre de personnes minimum :</strong> {{ menu.nombrePersonneMinimum }}</p>
+<p><strong>Thème :</strong> {{ menu.theme.libelle }}</p>
+<p><strong>Stock disponible :</strong> {{ menu.quantiteRestante }}</p>
+
+<p><strong>Régimes :</strong>
+    {% for regime in menu.regimes %}
+        {{ regime.libelle }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+</p>
+
+<h2>Plats proposés</h2>
+{% for plat in menu.plats %}
+    <div>
+        <strong>{{ plat.titrePlat }}</strong>
+        {% if plat.note %}<p>{{ plat.note }}</p>{% endif %}
+    </div>
+{% endfor %}
+
+<div style="border: 2px solid red; padding: 10px; margin: 20px 0;">
+    <strong>⚠️ Conditions importantes :</strong>
+    <p>Ce menu doit être commandé au minimum 7 jours avant la date de prestation.</p>
+</div>
+
+{% if app.user %}
+    <a href="{{ path('app_commander', {menu: menu.id}) }}">Commander ce menu</a>
+{% else %}
+    <a href="{{ path('app_login') }}">Connectez-vous pour commander</a>
+    ou <a href="{{ path('app_register') }}">créez un compte</a>
+{% endif %}
+
+<a href="{{ path('app_menus') }}">← Retour aux menus</a>
+{% endblock %}

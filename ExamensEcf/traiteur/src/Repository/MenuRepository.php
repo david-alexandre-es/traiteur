@@ -45,7 +45,8 @@ class MenuRepository extends ServiceEntityRepository
     $qb = $this->createQueryBuilder('m')
         ->leftJoin('m.theme', 't')
         ->leftJoin('m.regimes', 'r')
-        ->addSelect('t', 'r');
+        ->addSelect('t', 'r')
+        ->setMaxResults(50);
 
     if ($theme) {
         $qb->andWhere('t.id = :theme')

@@ -35,4 +35,11 @@ class MenuController extends AbstractController
             'selectedRegime' => $regime,
         ]);
     }
+    #[Route('/menus/{id}', name: 'app_menu_detail')]
+public function detail(\App\Entity\Menu $menu): Response
+{
+    return $this->render('menu/detail.html.twig', [
+        'menu' => $menu,
+    ]);
+}
 }
