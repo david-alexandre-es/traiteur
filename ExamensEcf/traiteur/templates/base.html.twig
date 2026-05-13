@@ -35,8 +35,24 @@
             <a href="{{ path('app_register') }}">S'inscrire</a>
         {% endif %}
         | <a href="{{ path('app_menus') }}">Nos menus</a>
+        | <a href="{{ path('app_contact') }}">Contact</a>
     </nav>
 
     {% block body %}{% endblock %}
+    <footer style="margin-top: 50px; padding: 20px; background: #333; color: white;">
+    <div>
+        <h3>Nos horaires</h3>
+        <p>Lundi - Vendredi : 9h00 - 18h00</p>
+        <p>Samedi : 9h00 - 12h00</p>
+        <p>Dimanche : Fermé</p>
+    </div>
+    <div>
+        <h3>Liens utiles</h3>
+        <a href="{{ path('app_mentions_legales') }}" style="color: white;">Mentions légales</a> |
+        <a href="{{ path('app_cgv') }}" style="color: white;">CGV</a> |
+        <a href="{{ path('app_contact') }}" style="color: white;">Contact</a>
+    </div>
+    <p style="margin-top: 10px;">© 2026 Traiteur Julie - Tous droits réservés</p>
+</footer>
 </body>
 </html>

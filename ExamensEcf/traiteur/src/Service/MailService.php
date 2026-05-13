@@ -80,4 +80,19 @@ class MailService
 
         $this->mailer->send($email);
     }
+    public function envoyerMailContact(string $titre, string $email, string $description): void
+{
+    $mail = (new Email())
+        ->from($email)
+        ->to('contact@traiteur.fr')
+        ->subject('Contact : ' . $titre)
+        ->html("
+            <h1>$titre</h1>
+            <p><strong>De :</strong> $email</p>
+            <p><strong>Message :</strong></p>
+            <p>$description</p>
+        ");
+
+    $this->mailer->send($mail);
+}
 }

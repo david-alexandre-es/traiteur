@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+<h1>Nous contacter</h1>
+
+<form method="post" action="{{ path('app_contact') }}">
+    <div>
+        <label for="titre">Titre</label>
+        <input type="text" id="titre" name="titre" required>
+    </div>
+    <div>
+        <label for="email">Votre email</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="description">Message</label>
+        <textarea id="description" name="description" required></textarea>
+    </div>
+    <button type="submit">Envoyer</button>
+</form>
+{% endblock %}
