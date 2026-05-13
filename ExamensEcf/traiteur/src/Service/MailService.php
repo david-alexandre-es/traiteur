@@ -13,12 +13,13 @@ class MailService
 
     public function envoyerMailBienvenue(Utilisateur $utilisateur): void
     {
+        $prenom = $utilisateur->getPrenom();
         $email = (new Email())
             ->from('noreply@traiteur.fr')
             ->to($utilisateur->getEmail())
             ->subject('Bienvenue chez notre Traiteur !')
             ->html("
-                <h1>Bienvenue {{ $utilisateur->getPrenom() }} !</h1>
+                <h1>Bienvenue $prenom !</h1>
                 <p>Votre compte a été créé avec succès.</p>
                 <p>Vous pouvez dès maintenant vous connecter et découvrir nos menus.</p>
                 <p>À bientôt !</p>
