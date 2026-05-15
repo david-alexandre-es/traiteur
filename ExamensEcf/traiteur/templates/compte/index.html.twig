@@ -10,6 +10,10 @@
     <div style="color: green">{{ message }}</div>
 {% endfor %}
 
+{% for message in app.flashes('error') %}
+    <div style="color: red">{{ message }}</div>
+{% endfor %}
+
 <a href="{{ path('app_commander') }}">+ Passer une commande</a>
 
 <h2>Mes commandes</h2>
@@ -25,6 +29,7 @@
                 <th>Personnes</th>
                 <th>Prix total</th>
                 <th>Statut</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +41,16 @@
                 <td>{{ commande.nombrePersonne }}</td>
                 <td>{{ commande.prixMenu }} €</td>
                 <td>{{ commande.statut }}</td>
+                <td>
+                    {% if commande.statut == 'en_attente' %}
+                        <a href="{{ path('app_commande_modifier', {id: commande.id}) }}">Modifier</a>
+                        <form method="post" action="{{ path('app_commande_annuler', {id: commande.id}) }}" style="display:inline">
+                            <button type="submit" onclick="return confirm('Annuler cette commande ?')">Annuler</button>
+                        </form>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

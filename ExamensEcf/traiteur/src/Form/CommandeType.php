@@ -16,6 +16,14 @@ class CommandeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        if (!$options['menu_disabled']) {
+            $builder->add('menu', EntityType::class, [
+                'class' => Menu::class,
+                'choice_label' => 'titre',
+                'label' => 'Menu choisi',
+            ]);
+        }
+
         $builder
             ->add('date_prestation', DateType::class, [
                 'label' => 'Date de la prestation',
@@ -29,11 +37,6 @@ class CommandeType extends AbstractType
             ])
             ->add('nombre_personne', IntegerType::class, [
                 'label' => 'Nombre de personnes',
-            ])
-            ->add('menu', EntityType::class, [
-                'class' => Menu::class,
-                'choice_label' => 'titre',
-                'label' => 'Menu choisi',
             ]);
     }
 
@@ -41,6 +44,7 @@ class CommandeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Commande::class,
+            'menu_disabled' => false,
         ]);
     }
 }

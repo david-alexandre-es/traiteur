@@ -107,4 +107,51 @@ class CompteController extends AbstractController
             'form' => $form,
         ]);
     }
+    #[Route('/commandes/{id}/annuler', name: 'app_commande_annuler', methods: ['POST'])]
+public function annulerCommande(\App\Entity\Commande $commande, EntityManagerInterface $em): Response
+{
+    if ($commande->getUtilisateur() !== $this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
+
+    if ($commande->getStatut() === 'en_attente') {
+        $commande->setStatut('annulee');
+        $em->flush();
+        $this->addFlash('success', 'Votre commande a été annulée.');
+    } else {
+        $this->addFlash('error', 'Cette commande ne peut plus être annulée.');
+    }
+
+    return $this->redirectToRoute('app_compte');
+}
+
+#[Route('/commandes/{id}/modifier', name: 'app_commande_modifier')]
+public function modifierCommande(\App\Entity\Commande $commande, Request $request, EntityManagerInterface $em): Response
+{
+    if ($commande->getUtilisateur() !== $this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
+
+    if ($commande->getStatut() !== 'en_attente') {
+        $this->addFlash('error', 'Cette commande ne peut plus être modifiée.');
+        return $this->redirectToRoute('app_compte');
+    }
+
+    $form = $this->createForm(CommandeType::class, $commande, [
+        'menu_disabled' => true,
+    ]);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $commande->setPrixMenu($commande->getMenu()->getPrixParPersonne() * $commande->getNombrePersonne());
+        $em->flush();
+        $this->addFlash('success', 'Votre commande a été modifiée.');
+        return $this->redirectToRoute('app_compte');
+    }
+
+    return $this->render('compte/modifier_commande.html.twig', [
+        'form' => $form,
+        'commande' => $commande,
+    ]);
+}
 }

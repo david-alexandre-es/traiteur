@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier ma commande{% endblock %}
+
+{% block body %}
+<h1>Modifier ma commande</h1>
+
+<p><strong>Menu :</strong> {{ commande.menu.titre }}</p>
+<p><strong>Numéro :</strong> {{ commande.numeroCommande }}</p>
+
+{{ form_start(form) }}
+    {{ form_row(form.date_prestation) }}
+    {{ form_row(form.heure_livraison) }}
+    {{ form_row(form.nombre_personne) }}
+
+    <button type="submit">Enregistrer les modifications</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_compte') }}">← Retour</a>
+{% endblock %}
