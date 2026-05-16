@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CommandeStatut;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,14 @@ class EmployeController extends AbstractController
     {
         $statut = $request->request->get('statut');
         $commande->setStatut($statut);
+
+        // Enregistrer dans l'historique
+        $commandeStatut = new CommandeStatut();
+        $commandeStatut->setStatut($statut);
+        $commandeStatut->setDateChangement(new \DateTime());
+        $commandeStatut->setCommande($commande);
+        $em->persist($commandeStatut);
+
         $em->flush();
         $this->addFlash('success', 'Statut mis à jour !');
         return $this->redirectToRoute('app_employe');
