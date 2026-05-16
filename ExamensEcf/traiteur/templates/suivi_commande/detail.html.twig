@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail commande {{ commande.numeroCommande }}{% endblock %}
+
+{% block body %}
+<h1>Commande {{ commande.numeroCommande }}</h1>
+
+<p><strong>Menu :</strong> {{ commande.menu.titre }}</p>
+<p><strong>Date prestation :</strong> {{ commande.datePrestation|date('d/m/Y') }}</p>
+<p><strong>Nombre de personnes :</strong> {{ commande.nombrePersonne }}</p>
+<p><strong>Prix total :</strong> {{ commande.prixMenu }} €</p>
+<p><strong>Statut actuel :</strong> {{ commande.statut }}</p>
+
+<h2>Historique des statuts</h2>
+
+{% if commande.commandeStatuts is empty %}
+    <p>Aucun historique disponible.</p>
+{% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Statut</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for statut in commande.commandeStatuts %}
+            <tr>
+                <td>{{ statut.statut }}</td>
+                <td>{{ statut.dateChangement|date('d/m/Y H:i') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<a href="{{ path('app_suivi_commande') }}">Retour à mes commandes</a>
+{% endblock %}

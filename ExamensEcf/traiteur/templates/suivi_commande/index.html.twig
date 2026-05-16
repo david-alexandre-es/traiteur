@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suivi de mes commandes{% endblock %}
+
+{% block body %}
+<h1>Suivi de mes commandes</h1>
+
+{% if commandes is empty %}
+    <p>Vous n'avez aucune commande.</p>
+{% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Numéro</th>
+                <th>Menu</th>
+                <th>Date prestation</th>
+                <th>Statut</th>
+                <th>Détail</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.numeroCommande }}</td>
+                <td>{{ commande.menu.titre }}</td>
+                <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
+                <td>{{ commande.statut }}</td>
+                <td>
+                    <a href="{{ path('app_suivi_commande_detail', {id: commande.id}) }}">Voir le détail</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
