@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommandeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -51,6 +53,17 @@ class Commande
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
+
+    /**
+     * @var Collection<int, CommandeStatut>
+     */
+    #[ORM\OneToMany(targetEntity: CommandeStatut::class, mappedBy: 'commande', orphanRemoval: true)]
+    private Collection $commandeStatuts;
+
+    public function __construct()
+    {
+        $this->commandeStatuts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -197,6 +210,36 @@ class Commande
     public function setMenu(?Menu $menu): static
     {
         $this->menu = $menu;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommandeStatut>
+     */
+    public function getCommandeStatuts(): Collection
+    {
+        return $this->commandeStatuts;
+    }
+
+    public function addCommandeStatut(CommandeStatut $commandeStatut): static
+    {
+        if (!$this->commandeStatuts->contains($commandeStatut)) {
+            $this->commandeStatuts->add($commandeStatut);
+            $commandeStatut->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeStatut(CommandeStatut $commandeStatut): static
+    {
+        if ($this->commandeStatuts->removeElement($commandeStatut)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeStatut->getCommande() === $this) {
+                $commandeStatut->setCommande(null);
+            }
+        }
 
         return $this;
     }
