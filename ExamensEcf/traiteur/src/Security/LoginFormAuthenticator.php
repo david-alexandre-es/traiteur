@@ -48,6 +48,11 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     $user = $token->getUser();
 
+// Vérifier si le compte est actif
+if ($user instanceof \App\Entity\Utilisateur && !$user->isActif()) {
+    throw new \Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException('Votre compte a été désactivé.');
+}
+
     if (in_array('ROLE_ADMIN', $user->getRoles())) {
         return new RedirectResponse($this->urlGenerator->generate('app_admin'));
     }

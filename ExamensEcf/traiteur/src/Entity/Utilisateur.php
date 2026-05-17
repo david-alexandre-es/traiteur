@@ -45,6 +45,9 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', enumType: RoleEnum::class)]
     private RoleEnum $role = RoleEnum::UTILISATEUR;
 
+    #[ORM\Column]
+private bool $actif = true;
+
     #[ORM\OneToMany(mappedBy: 'utilisateur', targetEntity: Avis::class, orphanRemoval: true)]
     private Collection $avis;
 
@@ -93,7 +96,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdressePostale(?string $adresse_postale): static { $this->adresse_postale = $adresse_postale; return $this; }
 
     public function getRole(): RoleEnum { return $this->role; }
-    public function setRole(RoleEnum $role): static { $this->role = $role; return $this; }
+public function setRole(RoleEnum $role): static { $this->role = $role; return $this; }
+
+public function isActif(): bool { return $this->actif; }
+public function setActif(bool $actif): static { $this->actif = $actif; return $this; }
 
     public function getAvis(): Collection { return $this->avis; }
     public function getCommandes(): Collection { return $this->commandes; }

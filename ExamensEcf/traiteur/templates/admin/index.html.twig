@@ -7,9 +7,11 @@
 <p>Bienvenue {{ app.user.prenom }} {{ app.user.nom }} !</p>
 
 <ul>
-    <li><a href="#">Gérer les menus</a></li>
-    <li><a href="#">Gérer les plats</a></li>
-    <li><a href="#">Gérer les commandes</a></li>
-    <li><a href="#">Gérer les utilisateurs</a></li>
+    <li><a href="{{ path('app_admin_menus') }}">Gérer les menus</a></li>
+    <li><a href="{{ path('app_admin_plats') }}">Gérer les plats</a></li>
+    <li><a href="{{ path('app_admin_commandes') }}">Gérer les commandes</a></li>
+    <li><a href="{{ path('app_admin_utilisateurs') }}">Gérer les utilisateurs</a></li>
+    <li><a href="{{ path('app_admin_avis') }}">Gérer les avis</a></li>
+    <li><a href="{{ path('app_admin_allergenes') }}">Gérer les allergènes</a></li>
 </ul>
 {% endblock %}

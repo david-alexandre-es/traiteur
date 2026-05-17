@@ -236,4 +236,15 @@ public function supprimerAllergene(\App\Entity\Allergene $allergene, EntityManag
     $this->addFlash('success', 'Allergène supprimé !');
     return $this->redirectToRoute('app_admin_allergenes');
 }
+#[Route('/utilisateurs/{id}/toggle-actif', name: 'app_admin_utilisateur_toggle_actif', methods: ['POST'])]
+
+public function toggleActif(\App\Entity\Utilisateur $utilisateur, EntityManagerInterface $em): Response
+{
+    $utilisateur->setActif(!$utilisateur->isActif());
+    $em->flush();
+    $statut = $utilisateur->isActif() ? 'activé' : 'désactivé';
+    $this->addFlash('success', 'Compte ' . $statut . ' avec succès !');
+    return $this->redirectToRoute('app_admin_utilisateurs');
+}
+
 }
