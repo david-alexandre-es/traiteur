@@ -40,4 +40,31 @@ class CommandeRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByFiltersCA(?string $menuId, ?string $dateDebut, ?string $dateFin): array
+{
+    $qb = $this->createQueryBuilder('c')
+        ->leftJoin('c.menu', 'm')
+        ->addSelect('m')
+        ->where('c.statut != :annulee')
+        ->setParameter('annulee', 'annulee');
+
+    if ($menuId) {
+        $qb->andWhere('m.id = :menuId')
+           ->setParameter('menuId', $menuId);
+    }
+
+    if ($dateDebut) {
+        $qb->andWhere('c.date_commande >= :dateDebut')
+           ->setParameter('dateDebut', new \DateTime($dateDebut));
+    }
+
+    if ($dateFin) {
+        $qb->andWhere('c.date_commande <= :dateFin')
+           ->setParameter('dateFin', new \DateTime($dateFin));
+    }
+
+    return $qb->getQuery()->getResult();
+}
+
 }

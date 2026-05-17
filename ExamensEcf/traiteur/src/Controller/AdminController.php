@@ -258,4 +258,28 @@ public function stats(\App\Service\StatService $statService): Response
     ]);
 }
 
+#[Route('/chiffre-affaires', name: 'app_admin_ca')]
+public function chiffreAffaires(Request $request, \App\Repository\CommandeRepository $commandeRepository, \App\Repository\MenuRepository $menuRepository): Response
+{
+    $menuId = $request->query->get('menu');
+    $dateDebut = $request->query->get('date_debut');
+    $dateFin = $request->query->get('date_fin');
+
+    $commandes = $commandeRepository->findByFiltersCA($menuId, $dateDebut, $dateFin);
+
+    $total = 0;
+    foreach ($commandes as $commande) {
+        $total += $commande->getPrixMenu() + ($commande->getPrixLivraison() ?? 0);
+    }
+
+    return $this->render('admin/chiffre_affaires.html.twig', [
+        'commandes' => $commandes,
+        'total' => $total,
+        'menus' => $menuRepository->findAll(),
+        'selectedMenu' => $menuId,
+        'dateDebut' => $dateDebut,
+        'dateFin' => $dateFin,
+    ]);
+}
+
 }

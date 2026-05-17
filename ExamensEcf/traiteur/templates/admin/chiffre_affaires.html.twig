@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chiffre d'affaires{% endblock %}
+
+{% block body %}
+<h1>Chiffre d'affaires</h1>
+
+<a href="{{ path('app_admin') }}">← Retour</a>
+
+<form method="get" action="{{ path('app_admin_ca') }}">
+    <select name="menu">
+        <option value="">Tous les menus</option>
+        {% for menu in menus %}
+            <option value="{{ menu.id }}" {% if selectedMenu == menu.id ~ '' %}selected{% endif %}>
+                {{ menu.titre }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <input type="date" name="date_debut" value="{{ dateDebut }}" placeholder="Date début">
+    <input type="date" name="date_fin" value="{{ dateFin }}" placeholder="Date fin">
+
+    <button type="submit">Filtrer</button>
+    <a href="{{ path('app_admin_ca') }}">Réinitialiser</a>
+</form>
+
+<h2>Total : {{ total|number_format(2, ',', ' ') }} €</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Menu</th>
+            <th>Client</th>
+            <th>Date commande</th>
+            <th>Prix menu</th>
+            <th>Livraison</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for commande in commandes %}
+        <tr>
+            <td>{{ commande.numeroCommande }}</td>
+            <td>{{ commande.menu.titre }}</td>
+            <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
+            <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
+            <td>{{ commande.prixMenu }} €</td>
+            <td>{{ commande.prixLivraison }} €</td>
+            <td>{{ commande.prixMenu + commande.prixLivraison }} €</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
