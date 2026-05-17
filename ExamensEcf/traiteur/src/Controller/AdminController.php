@@ -246,5 +246,16 @@ public function toggleActif(\App\Entity\Utilisateur $utilisateur, EntityManagerI
     $this->addFlash('success', 'Compte ' . $statut . ' avec succès !');
     return $this->redirectToRoute('app_admin_utilisateurs');
 }
+#[Route('/stats', name: 'app_admin_stats')]
+
+public function stats(\App\Service\StatService $statService): Response
+{
+    $statService->synchroniserStats();
+    $stats = $statService->getStats();
+
+    return $this->render('admin/stats.html.twig', [
+        'stats' => $stats,
+    ]);
+}
 
 }

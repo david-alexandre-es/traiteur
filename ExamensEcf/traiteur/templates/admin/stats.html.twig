@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+<h1>Statistiques des commandes</h1>
+
+<a href="{{ path('app_admin') }}">← Retour</a>
+
+<h2>Commandes par menu</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Menu</th>
+            <th>Nombre de commandes</th>
+            <th>Chiffre d'affaires</th>
+            <th>Dernière mise à jour</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stat in stats %}
+        <tr>
+            <td>{{ stat.menuTitre }}</td>
+            <td>{{ stat.nombreCommandes }}</td>
+            <td>{{ stat.chiffreAffaires|number_format(2, ',', ' ') }} €</td>
+            <td>{{ stat.dateMAJ|date('d/m/Y H:i') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Graphique</h2>
+<canvas id="graphique" width="800" height="400"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = [{% for stat in stats %}"{{ stat.menuTitre }}",{% endfor %}];
+    const data = [{% for stat in stats %}{{ stat.nombreCommandes }},{% endfor %}];
+
+    new Chart(document.getElementById('graphique'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Nombre de commandes',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endblock %}
