@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CommandeStatut;
 use App\Repository\CommandeRepository;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ class EmployeController extends AbstractController
     }
 
     #[Route('/commandes/{id}/statut', name: 'app_employe_commande_statut', methods: ['POST'])]
-    public function changerStatut(\App\Entity\Commande $commande, Request $request, EntityManagerInterface $em): Response
+    public function changerStatut(\App\Entity\Commande $commande, Request $request, EntityManagerInterface $em, MailService $mailService): Response
     {
         $statut = $request->request->get('statut');
         $commande->setStatut($statut);
@@ -35,6 +36,15 @@ class EmployeController extends AbstractController
         $commandeStatut->setDateChangement(new \DateTime());
         $commandeStatut->setCommande($commande);
         $em->persist($commandeStatut);
+
+        // Mail selon le statut
+        if ($statut === 'terminee') {
+            $mailService->envoyerMailAvisDisponible($commande);
+        }
+
+        if ($statut === 'en_attente_retour_materiel') {
+            $mailService->envoyerMailRetourMateriel($commande);
+        }
 
         $em->flush();
         $this->addFlash('success', 'Statut mis à jour !');
