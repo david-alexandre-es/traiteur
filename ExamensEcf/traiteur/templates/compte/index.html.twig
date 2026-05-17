@@ -39,7 +39,7 @@
                 <td>{{ commande.menu.titre }}</td>
                 <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
                 <td>{{ commande.nombrePersonne }}</td>
-                <td>{{ commande.prixMenu }} €</td>
+                <td>{{ commande.prixMenu + commande.prixLivraison }} €</td>
                 <td>{{ commande.statut }}</td>
                 <td>
                     {% if commande.statut == 'en_attente' %}

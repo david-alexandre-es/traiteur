@@ -6,6 +6,7 @@ use App\Entity\Commande;
 use App\Form\CommandeType;
 use App\Repository\CommandeRepository;
 use App\Repository\MenuRepository;
+use App\Service\LivraisonService;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +30,7 @@ class CompteController extends AbstractController
     }
 
     #[Route('/commander', name: 'app_commander')]
-    public function commander(Request $request, EntityManagerInterface $em, MenuRepository $menuRepository, MailService $mailService): Response
+    public function commander(Request $request, EntityManagerInterface $em, MenuRepository $menuRepository, MailService $mailService, LivraisonService $livraisonService): Response
     {
         $commande = new Commande();
 
@@ -50,7 +51,26 @@ class CompteController extends AbstractController
             $commande->setStatut('en_attente');
             $commande->setPretMateriel(false);
             $commande->setRetourMateriel(false);
-            $commande->setPrixMenu($commande->getMenu()->getPrixParPersonne() * $commande->getNombrePersonne());
+
+            // Calcul du prix de base
+            $menu = $commande->getMenu();
+            $nombrePersonnes = $commande->getNombrePersonne();
+            $prixBase = $menu->getPrixParPersonne() * $nombrePersonnes;
+
+            // Réduction 10% si 5 personnes de plus que le minimum
+            if ($nombrePersonnes >= $menu->getNombrePersonneMinimum() + 5) {
+                $prixBase = $prixBase * 0.90;
+            }
+
+            $commande->setPrixMenu($prixBase);
+
+            // Calcul des frais de livraison
+            $fraisLivraison = $livraisonService->calculerFraisLivraison(
+                $commande->getAdressePrestation(),
+                $commande->getVillePrestation()
+            );
+            $commande->setPrixLivraison($fraisLivraison);
+
             $commande->setUtilisateur($this->getUser());
 
             $em->persist($commande);
@@ -107,26 +127,27 @@ class CompteController extends AbstractController
             'form' => $form,
         ]);
     }
+
     #[Route('/commandes/{id}/annuler', name: 'app_commande_annuler', methods: ['POST'])]
-public function annulerCommande(\App\Entity\Commande $commande, EntityManagerInterface $em): Response
-{
-    if ($commande->getUtilisateur() !== $this->getUser()) {
-        throw $this->createAccessDeniedException();
+    public function annulerCommande(\App\Entity\Commande $commande, EntityManagerInterface $em): Response
+    {
+        if ($commande->getUtilisateur() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        if ($commande->getStatut() === 'en_attente') {
+            $commande->setStatut('annulee');
+            $em->flush();
+            $this->addFlash('success', 'Votre commande a été annulée.');
+        } else {
+            $this->addFlash('error', 'Cette commande ne peut plus être annulée.');
+        }
+
+        return $this->redirectToRoute('app_compte');
     }
 
-    if ($commande->getStatut() === 'en_attente') {
-        $commande->setStatut('annulee');
-        $em->flush();
-        $this->addFlash('success', 'Votre commande a été annulée.');
-    } else {
-        $this->addFlash('error', 'Cette commande ne peut plus être annulée.');
-    }
-
-    return $this->redirectToRoute('app_compte');
-}
-
-#[Route('/commandes/{id}/modifier', name: 'app_commande_modifier')]
-public function modifierCommande(\App\Entity\Commande $commande, Request $request, EntityManagerInterface $em): Response
+    #[Route('/commandes/{id}/modifier', name: 'app_commande_modifier')]
+public function modifierCommande(\App\Entity\Commande $commande, Request $request, EntityManagerInterface $em, LivraisonService $livraisonService): Response
 {
     if ($commande->getUtilisateur() !== $this->getUser()) {
         throw $this->createAccessDeniedException();
@@ -143,7 +164,24 @@ public function modifierCommande(\App\Entity\Commande $commande, Request $reques
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $commande->setPrixMenu($commande->getMenu()->getPrixParPersonne() * $commande->getNombrePersonne());
+        $nombrePersonnes = $commande->getNombrePersonne();
+        $menu = $commande->getMenu();
+        $prixBase = $menu->getPrixParPersonne() * $nombrePersonnes;
+
+        // Réduction 10% si 5 personnes de plus que le minimum
+        if ($nombrePersonnes >= $menu->getNombrePersonneMinimum() + 5) {
+            $prixBase = $prixBase * 0.90;
+        }
+
+        $commande->setPrixMenu($prixBase);
+
+        // Recalcul des frais de livraison
+        $fraisLivraison = $livraisonService->calculerFraisLivraison(
+            $commande->getAdressePrestation(),
+            $commande->getVillePrestation()
+        );
+        $commande->setPrixLivraison($fraisLivraison);
+
         $em->flush();
         $this->addFlash('success', 'Votre commande a été modifiée.');
         return $this->redirectToRoute('app_compte');

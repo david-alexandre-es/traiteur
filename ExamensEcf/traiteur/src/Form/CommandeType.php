@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,6 +35,12 @@ class CommandeType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
                 'input' => 'string',
+            ])
+            ->add('adresse_prestation', TextType::class, [
+                'label' => 'Adresse de la prestation',
+            ])
+            ->add('ville_prestation', TextType::class, [
+                'label' => 'Ville de la prestation',
             ])
             ->add('nombre_personne', IntegerType::class, [
                 'label' => 'Nombre de personnes',

@@ -8,7 +8,9 @@
 <p><strong>Menu :</strong> {{ commande.menu.titre }}</p>
 <p><strong>Date prestation :</strong> {{ commande.datePrestation|date('d/m/Y') }}</p>
 <p><strong>Nombre de personnes :</strong> {{ commande.nombrePersonne }}</p>
-<p><strong>Prix total :</strong> {{ commande.prixMenu }} €</p>
+<p><strong>Prix menu :</strong> {{ commande.prixMenu }} €</p>
+<p><strong>Frais de livraison :</strong> {{ commande.prixLivraison }} €</p>
+<p><strong>Prix total :</strong> {{ commande.prixMenu + commande.prixLivraison }} €</p>
 <p><strong>Statut actuel :</strong> {{ commande.statut }}</p>
 
 <h2>Historique des statuts</h2>

@@ -28,6 +28,12 @@ class Commande
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $heure_livraison = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+private ?string $adresse_prestation = null;
+
+#[ORM\Column(length: 100, nullable: true)]
+private ?string $ville_prestation = null;
+
     #[ORM\Column]
     private ?float $prix_menu = null;
 
@@ -117,6 +123,28 @@ class Commande
 
         return $this;
     }
+
+    public function getAdressePrestation(): ?string
+{
+    return $this->adresse_prestation;
+}
+
+public function setAdressePrestation(?string $adresse_prestation): static
+{
+    $this->adresse_prestation = $adresse_prestation;
+    return $this;
+}
+
+public function getVillePrestation(): ?string
+{
+    return $this->ville_prestation;
+}
+
+public function setVillePrestation(?string $ville_prestation): static
+{
+    $this->ville_prestation = $ville_prestation;
+    return $this;
+}
 
     public function getPrixMenu(): ?float
     {
