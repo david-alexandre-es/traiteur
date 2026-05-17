@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annuler la commande{% endblock %}
+
+{% block body %}
+<h1>Annuler la commande {{ commande.numeroCommande }}</h1>
+
+<p><strong>Client :</strong> {{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</p>
+<p><strong>Menu :</strong> {{ commande.menu.titre }}</p>
+<p><strong>Date prestation :</strong> {{ commande.datePrestation|date('d/m/Y') }}</p>
+
+<div style="border: 2px solid red; padding: 15px; margin: 20px 0;">
+    <p>⚠️ Avant d'annuler cette commande, vous devez avoir contacté le client par appel GSM ou mail.</p>
+</div>
+
+{{ form_start(form) }}
+    {{ form_row(form.mode_contact) }}
+    {{ form_row(form.motif_annulation) }}
+    <button type="submit" onclick="return confirm('Confirmer l\'annulation ?')">Annuler la commande</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_employe') }}">← Retour</a>
+{% endblock %}

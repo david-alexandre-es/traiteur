@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Images du menu {{ menu.titre }}{% endblock %}
+
+{% block body %}
+<h1>Images du menu : {{ menu.titre }}</h1>
+
+<a href="{{ path('app_admin_menus') }}">← Retour aux menus</a>
+
+<h2>Ajouter une image</h2>
+{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+    {{ form_row(form.imageFile) }}
+    <button type="submit">Ajouter</button>
+{{ form_end(form) }}
+
+<h2>Images actuelles</h2>
+{% if menu.images is empty %}
+    <p>Aucune image pour ce menu.</p>
+{% else %}
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        {% for image in menu.images %}
+            <div>
+                <img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="Image menu" style="width: 200px; height: 150px; object-fit: cover;">
+                <form method="post" action="{{ path('app_admin_menu_image_supprimer', {id: image.id}) }}">
+                    <button type="submit" onclick="return confirm('Supprimer cette image ?')">Supprimer</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

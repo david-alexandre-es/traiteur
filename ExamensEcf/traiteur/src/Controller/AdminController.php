@@ -282,4 +282,35 @@ public function chiffreAffaires(Request $request, \App\Repository\CommandeReposi
     ]);
 }
 
+#[Route('/menus/{id}/images', name: 'app_admin_menu_images')]
+public function menuImages(\App\Entity\Menu $menu, Request $request, EntityManagerInterface $em): Response
+{
+    $image = new \App\Entity\MenuImage();
+    $form = $this->createForm(\App\Form\MenuImageType::class, $image);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $image->setMenu($menu);
+        $em->persist($image);
+        $em->flush();
+        $this->addFlash('success', 'Image ajoutée !');
+        return $this->redirectToRoute('app_admin_menu_images', ['id' => $menu->getId()]);
+    }
+
+    return $this->render('admin/menus/images.html.twig', [
+        'menu' => $menu,
+        'form' => $form,
+    ]);
+}
+
+#[Route('/menus/images/{id}/supprimer', name: 'app_admin_menu_image_supprimer', methods: ['POST'])]
+public function supprimerImage(\App\Entity\MenuImage $image, EntityManagerInterface $em): Response
+{
+    $menuId = $image->getMenu()->getId();
+    $em->remove($image);
+    $em->flush();
+    $this->addFlash('success', 'Image supprimée !');
+    return $this->redirectToRoute('app_admin_menu_images', ['id' => $menuId]);
+}
+
 }

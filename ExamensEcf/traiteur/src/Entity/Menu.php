@@ -56,11 +56,18 @@ class Menu
     #[ORM\ManyToMany(targetEntity: Plat::class, inversedBy: 'menus')]
     private Collection $plats;
 
+    /**
+ * @var Collection<int, MenuImage>
+ */
+#[ORM\OneToMany(targetEntity: MenuImage::class, mappedBy: 'menu', orphanRemoval: true, cascade: ['persist'])]
+private Collection $images;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
         $this->regimes = new ArrayCollection();
         $this->plats = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -229,4 +236,22 @@ class Menu
 
         return $this;
     }
+
+    public function getImages(): Collection { return $this->images; }
+
+public function addImage(MenuImage $image): static
+{
+    if (!$this->images->contains($image)) {
+        $this->images->add($image);
+        $image->setMenu($this);
+    }
+    return $this;
+}
+
+public function removeImage(MenuImage $image): static
+{
+    $this->images->removeElement($image);
+    return $this;
+}
+
 }

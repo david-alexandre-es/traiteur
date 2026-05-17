@@ -5,6 +5,14 @@
 {% block body %}
 <h1>{{ menu.titre }}</h1>
 
+{% if menu.images is not empty %}
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+    {% for image in menu.images %}
+        <img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="{{ menu.titre }}" style="width: 250px; height: 180px; object-fit: cover;">
+    {% endfor %}
+</div>
+{% endif %}
+
 <p>{{ menu.description }}</p>
 <p><strong>Prix par personne :</strong> {{ menu.prixParPersonne }} €</p>
 <p><strong>Nombre de personnes minimum :</strong> {{ menu.nombrePersonneMinimum }}</p>

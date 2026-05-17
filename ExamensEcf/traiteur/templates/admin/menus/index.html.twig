@@ -28,6 +28,7 @@
             <td>{{ menu.theme.libelle }}</td>
             <td>
                 <a href="{{ path('app_admin_menu_modifier', {id: menu.id}) }}">Modifier</a>
+                <a href="{{ path('app_admin_menu_images', {id: menu.id}) }}">Images</a>
                 <form method="post" action="{{ path('app_admin_menu_supprimer', {id: menu.id}) }}" style="display:inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ menu.id) }}">
                     <button type="submit" onclick="return confirm('Supprimer ce menu ?')">Supprimer</button>

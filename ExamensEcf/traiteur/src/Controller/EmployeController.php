@@ -50,4 +50,27 @@ class EmployeController extends AbstractController
         $this->addFlash('success', 'Statut mis à jour !');
         return $this->redirectToRoute('app_employe');
     }
+
+    #[Route('/commandes/{id}/annuler', name: 'app_employe_commande_annuler')]
+public function annulerCommande(\App\Entity\Commande $commande, Request $request, EntityManagerInterface $em): Response
+{
+    $form = $this->createForm(\App\Form\AnnulationCommandeType::class);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $data = $form->getData();
+        $commande->setStatut('annulee');
+        $commande->setMotifAnnulation($data['motif_annulation']);
+        $commande->setModeContact($data['mode_contact']);
+        $em->flush();
+        $this->addFlash('success', 'Commande annulée avec succès !');
+        return $this->redirectToRoute('app_employe');
+    }
+
+    return $this->render('employe/annuler_commande.html.twig', [
+        'form' => $form,
+        'commande' => $commande,
+    ]);
+}
+
 }

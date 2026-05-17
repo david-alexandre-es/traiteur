@@ -52,6 +52,12 @@ private ?string $ville_prestation = null;
     #[ORM\Column]
     private ?bool $retour_materiel = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+private ?string $motif_annulation = null;
+
+#[ORM\Column(length: 50, nullable: true)]
+private ?string $mode_contact = null;
+
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Utilisateur $utilisateur = null;
@@ -217,6 +223,12 @@ public function setVillePrestation(?string $ville_prestation): static
 
         return $this;
     }
+
+    public function getMotifAnnulation(): ?string { return $this->motif_annulation; }
+public function setMotifAnnulation(?string $motif_annulation): static { $this->motif_annulation = $motif_annulation; return $this; }
+
+public function getModeContact(): ?string { return $this->mode_contact; }
+public function setModeContact(?string $mode_contact): static { $this->mode_contact = $mode_contact; return $this; }
 
     public function getUtilisateur(): ?Utilisateur
     {

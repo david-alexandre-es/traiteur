@@ -45,6 +45,7 @@
     <option value="annulee" {% if commande.statut == 'annulee' %}selected{% endif %}>Annulée</option>
 </select>
                     <button type="submit">Mettre à jour</button>
+                    <a href="{{ path('app_employe_commande_annuler', {id: commande.id}) }}">Annuler</a>
                 </form>
             </td>
         </tr>
