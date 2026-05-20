@@ -3,21 +3,42 @@
 {% block title %}Contact{% endblock %}
 
 {% block body %}
-<h1>Nous contacter</h1>
+<div class="container py-5">
 
-<form method="post" action="{{ path('app_contact') }}">
-    <div>
-        <label for="titre">Titre</label>
-        <input type="text" id="titre" name="titre" required>
+    {# Titre #}
+    <div class="text-center mb-5">
+        <h1>Nous contacter</h1>
+        <div class="separateur-or mx-auto mt-3"></div>
     </div>
-    <div>
-        <label for="email">Votre email</label>
-        <input type="email" id="email" name="email" required>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="carte-sombre p-4">
+                <form method="post" action="{{ path('app_contact') }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="titre" class="form-label">Titre</label>
+                            <input type="text" id="titre" name="titre" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Votre email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="description" class="form-label">Message</label>
+                            <textarea id="description" name="description" class="form-control" rows="6" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn bouton-or">
+                            <i class="bi bi-send me-2"></i>Envoyer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="description">Message</label>
-        <textarea id="description" name="description" required></textarea>
-    </div>
-    <button type="submit">Envoyer</button>
-</form>
+
+</div>
 {% endblock %}

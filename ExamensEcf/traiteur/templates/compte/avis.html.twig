@@ -2,15 +2,42 @@
 
 {% block title %}Laisser un avis{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/compte.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Laisser un avis</h1>
+<div class="container py-5">
 
-{{ form_start(form) }}
-    {{ form_row(form.note) }}
-    {{ form_row(form.description) }}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Laisser un avis</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-    <button type="submit">Envoyer mon avis</button>
-{{ form_end(form) }}
+    {# Formulaire #}
+    <div class="carte-sombre p-4">
+        {{ form_start(form) }}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form_row(form.note) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.description) }}
+                </div>
+            </div>
 
-<a href="{{ path('app_compte') }}">← Retour</a>
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn bouton-or">
+                    <i class="bi bi-send me-2"></i>Envoyer mon avis
+                </button>
+                <a href="{{ path('app_compte') }}" class="btn bouton-secondaire">
+                    <i class="bi bi-arrow-left me-2"></i>Retour
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+</div>
 {% endblock %}

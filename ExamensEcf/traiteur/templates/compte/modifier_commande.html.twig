@@ -3,18 +3,53 @@
 {% block title %}Modifier ma commande{% endblock %}
 
 {% block body %}
-<h1>Modifier ma commande</h1>
+<div class="container py-5">
 
-<p><strong>Menu :</strong> {{ commande.menu.titre }}</p>
-<p><strong>Numéro :</strong> {{ commande.numeroCommande }}</p>
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Modifier ma commande</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-{{ form_start(form) }}
-    {{ form_row(form.date_prestation) }}
-    {{ form_row(form.heure_livraison) }}
-    {{ form_row(form.nombre_personne) }}
+    {# Infos commande #}
+    <div class="carte-sombre p-4 mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-1 texte-secondaire">Menu</p>
+                <p class="mb-0">{{ commande.menu.titre }}</p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-1 texte-secondaire">Numéro de commande</p>
+                <p class="mb-0">{{ commande.numeroCommande }}</p>
+            </div>
+        </div>
+    </div>
 
-    <button type="submit">Enregistrer les modifications</button>
-{{ form_end(form) }}
+    {# Formulaire #}
+    <div class="carte-sombre p-4">
+        {{ form_start(form) }}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form_row(form.date_prestation) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.heure_livraison) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.nombre_personne) }}
+                </div>
+            </div>
 
-<a href="{{ path('app_compte') }}">← Retour</a>
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn bouton-or">
+                    <i class="bi bi-check-lg me-2"></i>Enregistrer les modifications
+                </button>
+                <a href="{{ path('app_compte') }}" class="btn bouton-secondaire">
+                    <i class="bi bi-arrow-left me-2"></i>Retour
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+</div>
 {% endblock %}

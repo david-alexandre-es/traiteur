@@ -3,16 +3,42 @@
 {% block title %}Passer une commande{% endblock %}
 
 {% block body %}
-<h1>Passer une commande</h1>
+<div class="container py-5">
 
-{{ form_start(form) }}
-    {{ form_row(form.menu) }}
-    {{ form_row(form.date_prestation) }}
-    {{ form_row(form.heure_livraison) }}
-    {{ form_row(form.nombre_personne) }}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Passer une commande</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-    <button type="submit">Commander</button>
-{{ form_end(form) }}
+    {# Formulaire #}
+    <div class="carte-sombre p-4">
+        {{ form_start(form) }}
+            <div class="row g-3">
+                <div class="col-12">
+                    {{ form_row(form.menu) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.date_prestation) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.heure_livraison) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.nombre_personne) }}
+                </div>
+            </div>
 
-<a href="{{ path('app_compte') }}">← Retour</a>
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn bouton-or">
+                    <i class="bi bi-bag-check me-2"></i>Commander
+                </button>
+                <a href="{{ path('app_compte') }}" class="btn bouton-secondaire">
+                    <i class="bi bi-arrow-left me-2"></i>Retour
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+</div>
 {% endblock %}

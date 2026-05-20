@@ -3,34 +3,57 @@
 {% block title %}Suivi de mes commandes{% endblock %}
 
 {% block body %}
-<h1>Suivi de mes commandes</h1>
+<div class="container py-5">
 
-{% if commandes is empty %}
-    <p>Vous n'avez aucune commande.</p>
-{% else %}
-    <table>
-        <thead>
-            <tr>
-                <th>Numéro</th>
-                <th>Menu</th>
-                <th>Date prestation</th>
-                <th>Statut</th>
-                <th>Détail</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for commande in commandes %}
-            <tr>
-                <td>{{ commande.numeroCommande }}</td>
-                <td>{{ commande.menu.titre }}</td>
-                <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
-                <td>{{ commande.statut }}</td>
-                <td>
-                    <a href="{{ path('app_suivi_commande_detail', {id: commande.id}) }}">Voir le détail</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Suivi de mes commandes</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
+
+    {% if commandes is empty %}
+        <div class="carte-sombre p-4 text-center">
+            <p class="texte-secondaire mb-0">Vous n'avez aucune commande.</p>
+        </div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Menu</th>
+                        <th>Date prestation</th>
+                        <th>Statut</th>
+                        <th>Détail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for commande in commandes %}
+                    <tr>
+                        <td>{{ commande.numeroCommande }}</td>
+                        <td>{{ commande.menu.titre }}</td>
+                        <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
+                        <td>
+                            <span class="badge-statut badge-{{ commande.statut }}">
+                                {{ commande.statut }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_suivi_commande_detail', {id: commande.id}) }}" class="btn bouton-secondaire btn-sm">
+                                <i class="bi bi-eye me-1"></i>Voir le détail
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    {# Retour #}
+    <a href="{{ path('app_compte') }}" class="btn bouton-secondaire mt-4">
+        <i class="bi bi-arrow-left me-2"></i>Retour à mon compte
+    </a>
+
+</div>
 {% endblock %}

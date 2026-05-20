@@ -1,22 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}Mot de passe oublié{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-    <h1>Reset your password</h1>
+<div class="container py-5">
 
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
-        <div>
-            <small>
-                Enter your email address, and we will send you a
-                link to reset your password.
-            </small>
+    {# Titre #}
+    <div class="text-center mb-5">
+        <h1>Mot de passe oublié</h1>
+        <div class="separateur-or mx-auto mt-3"></div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            {# Erreurs #}
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <div class="alert-erreur mb-3">
+                    <i class="bi bi-exclamation-triangle me-2"></i>{{ flash_error }}
+                </div>
+            {% endfor %}
+
+            <div class="carte-sombre p-4">
+                {{ form_start(requestForm) }}
+                    <div class="mb-3">
+                        {{ form_row(requestForm.email) }}
+                        <small class="texte-secondaire">
+                            Saisissez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn bouton-or w-100">
+                        <i class="bi bi-envelope me-2"></i>Envoyer le lien de réinitialisation
+                    </button>
+                {{ form_end(requestForm) }}
+            </div>
+
         </div>
+    </div>
 
-        <button class="btn btn-primary">Send password reset email</button>
-    {{ form_end(requestForm) }}
+</div>
 {% endblock %}

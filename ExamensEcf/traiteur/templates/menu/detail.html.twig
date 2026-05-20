@@ -2,48 +2,102 @@
 
 {% block title %}{{ menu.titre }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/menus.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>{{ menu.titre }}</h1>
+<div class="container py-5">
 
-{% if menu.images is not empty %}
-<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-    {% for image in menu.images %}
-        <img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="{{ menu.titre }}" style="width: 250px; height: 180px; object-fit: cover;">
-    {% endfor %}
-</div>
-{% endif %}
-
-<p>{{ menu.description }}</p>
-<p><strong>Prix par personne :</strong> {{ menu.prixParPersonne }} €</p>
-<p><strong>Nombre de personnes minimum :</strong> {{ menu.nombrePersonneMinimum }}</p>
-<p><strong>Thème :</strong> {{ menu.theme.libelle }}</p>
-<p><strong>Stock disponible :</strong> {{ menu.quantiteRestante }}</p>
-
-<p><strong>Régimes :</strong>
-    {% for regime in menu.regimes %}
-        {{ regime.libelle }}{% if not loop.last %}, {% endif %}
-    {% endfor %}
-</p>
-
-<h2>Plats proposés</h2>
-{% for plat in menu.plats %}
-    <div>
-        <strong>{{ plat.titrePlat }}</strong>
-        {% if plat.note %}<p>{{ plat.note }}</p>{% endif %}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>{{ menu.titre }}</h1>
+        <div class="separateur-or mt-2"></div>
     </div>
-{% endfor %}
 
-<div style="border: 2px solid red; padding: 10px; margin: 20px 0;">
-    <strong>⚠️ Conditions importantes :</strong>
-    <p>Ce menu doit être commandé au minimum 7 jours avant la date de prestation.</p>
+    {# Images #}
+    {% if menu.images is not empty %}
+        <div class="row g-3 mb-4">
+            {% for image in menu.images %}
+                <div class="col-md-4 col-sm-6">
+                    <img src="{{ vich_uploader_asset(image, 'imageFile') }}"
+                         alt="{{ menu.titre }}"
+                         class="image-detail-menu">
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Infos menu #}
+    <div class="row g-4 mb-4">
+        <div class="col-md-8">
+            <div class="carte-sombre p-4 h-100">
+                <p class="mb-3">{{ menu.description }}</p>
+                <p class="mb-2">
+                    <span class="texte-secondaire">Thème</span><br>
+                    {{ menu.theme.libelle }}
+                </p>
+                <p class="mb-2">
+                    <span class="texte-secondaire">Régimes</span><br>
+                    {% for regime in menu.regimes %}
+                        {{ regime.libelle }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="carte-sombre p-4 h-100 text-center">
+                <p class="texte-secondaire mb-1">Prix par personne</p>
+                <h2 class="mb-3">{{ menu.prixParPersonne }} €</h2>
+                <p class="texte-secondaire mb-1">Personnes minimum</p>
+                <h3 class="mb-3">{{ menu.nombrePersonneMinimum }}</h3>
+                <p class="texte-secondaire mb-1">Stock disponible</p>
+                <h3 class="mb-0">{{ menu.quantiteRestante }}</h3>
+            </div>
+        </div>
+    </div>
+
+    {# Plats #}
+    <h2 class="mb-3">Plats proposés</h2>
+    <div class="row g-3 mb-4">
+        {% for plat in menu.plats %}
+            <div class="col-md-4">
+                <div class="carte-sombre p-3">
+                    <strong class="nom-plat">{{ plat.titrePlat }}</strong>
+                    {% if plat.note %}
+                        <p class="texte-secondaire mt-1 mb-0">{{ plat.note }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Avertissement #}
+    <div class="alerte-avertissement mb-4">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <strong>Conditions importantes :</strong>
+        Ce menu doit être commandé au minimum 7 jours avant la date de prestation.
+    </div>
+
+    {# Actions #}
+    <div class="d-flex gap-3">
+        {% if app.user %}
+            <a href="{{ path('app_commander', {menu: menu.id}) }}" class="btn bouton-or">
+                <i class="bi bi-bag-plus me-2"></i>Commander ce menu
+            </a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn bouton-or">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Se connecter pour commander
+            </a>
+            <a href="{{ path('app_register') }}" class="btn bouton-secondaire">
+                <i class="bi bi-person-plus me-2"></i>Créer un compte
+            </a>
+        {% endif %}
+        <a href="{{ path('app_menus') }}" class="btn bouton-secondaire">
+            <i class="bi bi-arrow-left me-2"></i>Retour aux menus
+        </a>
+    </div>
+
 </div>
-
-{% if app.user %}
-    <a href="{{ path('app_commander', {menu: menu.id}) }}">Commander ce menu</a>
-{% else %}
-    <a href="{{ path('app_login') }}">Connectez-vous pour commander</a>
-    ou <a href="{{ path('app_register') }}">créez un compte</a>
-{% endif %}
-
-<a href="{{ path('app_menus') }}">← Retour aux menus</a>
 {% endblock %}

@@ -2,21 +2,60 @@
 
 {% block title %}{{ titre }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/admin.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>{{ titre }}</h1>
+<div class="container py-5">
 
-{{ form_start(form) }}
-    {{ form_row(form.titre) }}
-    {{ form_row(form.description) }}
-    {{ form_row(form.prix_par_personne) }}
-    {{ form_row(form.nombre_personne_minimum) }}
-    {{ form_row(form.quantite_restante) }}
-    {{ form_row(form.theme) }}
-    {{ form_row(form.regimes) }}
-    {{ form_row(form.plats) }}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>{{ titre }}</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-    <button type="submit">Enregistrer</button>
-{{ form_end(form) }}
+    {# Formulaire #}
+    <div class="carte-sombre p-4">
+        {{ form_start(form) }}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form_row(form.titre) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.prix_par_personne) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.nombre_personne_minimum) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.quantite_restante) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.description) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.theme) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.regimes) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.plats) }}
+                </div>
+            </div>
 
-<a href="{{ path('app_admin_menus') }}">← Retour</a>
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn bouton-or">
+                    <i class="bi bi-check-lg me-2"></i>Enregistrer
+                </button>
+                <a href="{{ path('app_admin_menus') }}" class="btn bouton-secondaire">
+                    <i class="bi bi-arrow-left me-2"></i>Retour
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+</div>
 {% endblock %}

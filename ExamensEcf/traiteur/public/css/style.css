@@ -1,0 +1,297 @@
+/*  VARIABLES  */
+:root {
+    --couleur-principale: #c9a84c;
+    --couleur-hover: #e8c96d;  /* survol de la souris */
+    --arriere-plan: #1a1a1a;
+    --arriere-plan-carte: #2d2d2d;
+    --arriere-plan-nav: #111111;
+    --couleur-texte: #f5f5f5;
+    --couleur-texte-secondaire: #aaaaaa;
+}
+
+/*  Base du Body  */
+body {
+    background-color: var(--arriere-plan);
+    color: var(--couleur-texte);
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Titres  */
+h1, h2, h3, h4, h5 {
+    font-family: 'Playfair Display', serif;
+    color: var(--couleur-principale);
+}
+
+/* Liens  */
+a {
+    color: var(--couleur-principale);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+/* Survol des liens  */
+a:hover {
+    color: var(--couleur-hover);
+}
+
+/* Conteneur principal  */
+main {
+    flex: 1;
+    padding: 2rem 0;
+}
+
+/*  Navbar */
+.navbar {
+    background-color: var(--arriere-plan-nav);
+    border-bottom: 1px solid var(--couleur-principale);
+    padding: 1rem 0;
+}
+
+/* logo */
+.logo-nav {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--couleur-principale) !important;
+    letter-spacing: 1px;
+}
+
+/* Survol du logo */
+.logo-nav:hover {
+    color: var(--couleur-hover) !important;
+}
+
+/* Liens de navigation */
+.nav-liens {
+    color: var(--couleur-texte) !important;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+/* couleur au survol des liens de navigation */
+.nav-liens:hover {
+    color: var(--couleur-hover) !important;
+}
+
+/* Bouton burger mobile */
+.bouton-burger {
+    border-color: var(--couleur-principale);
+}
+
+/* Boutons principal et textes */
+.bouton-or {
+    background-color: var(--couleur-principale);
+    color: #1a1a1a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+    border-radius: 0;
+    border: none;
+    padding: 0.45rem 1.3rem;
+    transition: background-color 0.3s;
+}
+
+/* couleur au survol des boutons */
+.bouton-or:hover {
+    background-color: var(--couleur-hover);
+    color: #1a1a1a;
+}
+
+/* Bouton secondaire  */
+.bouton-secondaire {
+    border: 1px solid var(--couleur-principale);
+    color: var(--couleur-principale);
+    background: transparent;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 0;
+    padding: 0.45rem 1.3rem;
+    transition: all 0.3s;
+}
+
+/* couleur au survol des boutons secondaires */
+.bouton-secondaire:hover {
+    background-color: var(--couleur-principale);
+    color: #1a1a1a;
+}
+
+/* Alertes succes */
+.alert-succes {
+    background-color: #1e3a2f;
+    border: 1px solid #2d6a4f;
+    color: #95d5b2;
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+}
+
+/* Alertes erreur */
+.alert-erreur {
+    background-color: #3a1e1e;
+    border: 1px solid #6a2d2d;
+    color: #d59595;
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+}
+
+/* avertissement */
+.alerte-avertissement {
+    background-color: #3a2e1e;
+    border: 1px solid #c9a84c;
+    color: #e8c96d;
+    padding: 1rem 1.2rem;
+    border-radius: 0;
+}
+
+/* icone grande */
+.icone-grande {
+    font-size: 3rem;
+    color: var(--couleur-principale);
+}
+
+/* styles cartes , menu , plats , etc ... */
+.carte-sombre {
+    background-color: var(--arriere-plan-carte);
+    border: 1px solid #3a3a3a;
+    border-radius: 0;
+    transition: border-color 0.3s, transform 0.3s;
+}
+
+/* effet de survol pour les cartes */
+.carte-sombre:hover {
+    border-color: var(--couleur-principale);
+    transform: translateY(-4px);
+}
+
+/* formulaires */
+.form-control,
+.form-select {
+    background-color: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    color: var(--couleur-texte);
+    border-radius: 0;
+}
+
+/* couleur au focus des champs de formulaire */
+.form-control:focus,
+.form-select:focus {
+    background-color: #2a2a2a;
+    border-color: var(--couleur-principale);
+    color: var(--couleur-texte);
+    box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.15);
+}
+
+/* labels des formulaires */
+.form-label {
+    color: var(--couleur-texte-secondaire);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+/*  tableaux */
+.table {
+    color: var(--couleur-texte);
+}
+
+/* en-têtes de tableaux */
+.table thead th {
+    background-color: var(--arriere-plan-nav);
+    color: var(--couleur-principale);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    border-color: #3a3a3a;
+}
+
+/* cellules de tableaux */
+.table td,
+.table th {
+    border-color: #2d2d2d;
+    vertical-align: middle;
+}
+
+/* effet de survol pour les lignes de tableaux */
+.table tbody tr:hover {
+    background-color: #252525;
+}
+
+/* séparateur ligne footer */
+.separateur-or {
+    width: 50px;
+    height: 2px;
+    background-color: var(--couleur-principale);
+}
+
+/* pied de page */
+.footer {
+    background-color: var(--arriere-plan-nav);
+    border-top: 1px solid var(--couleur-principale);
+    padding: 3rem 0 1.5rem;
+    margin-top: auto;
+}
+
+/* titres du footer */
+.footer-titre {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.footer-text {
+    color: var(--couleur-texte-secondaire);
+    font-size: 0.9rem;
+    line-height: 2;
+}
+
+/* liens du footer */
+.footer-liens {
+    color: var(--couleur-texte-secondaire);
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+/* couleur au survol des liens du footer */
+.footer-liens:hover {
+    color: var(--couleur-principale);
+}
+
+/* style ligne copyright */
+.footer-copy {
+    border-top: 1px solid #2a2a2a;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    color: var(--couleur-texte-secondaire);
+    font-size: 0.8rem;
+}
+
+/* texte secondaire */
+.texte-secondaire {
+    color: var(--couleur-texte-secondaire);
+}
+
+/* responsive mobile */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.75rem 0;
+    }
+
+    .logo-nav {
+        font-size: 1.2rem;
+    }
+
+    main {
+        padding: 1rem 0;
+    }
+
+    .footer {
+        padding: 2rem 0 1rem;
+    }
+}
+

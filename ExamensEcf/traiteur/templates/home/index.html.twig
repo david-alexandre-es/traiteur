@@ -1,23 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - Traiteur{% endblock %}
+{% block title %}Accueil - Traiteur Julie{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/home.css') }}">
+{% endblock %}
 
 {% block body %}
-<h1>Bienvenue chez notre Traiteur</h1>
-<p>Découvrez nos menus et prestations.</p>
 
-<a href="{{ path('app_menus') }}">Voir nos menus</a>
+{# SECTION HERO #}
+<section class="hero-section text-center">
+    <div class="container">
+        <p class="hero-sous-titre">Bienvenue chez</p>
+        <h1 class="hero-titre">Traiteur Julie</h1>
+        <div class="separateur-or mx-auto mb-4"></div>
+        <p class="hero-description">Une cuisine raffinée pour vos événements les plus précieux.<br>Mariages, séminaires, cocktails et réceptions.</p>
+        <a href="{{ path('app_menus') }}" class="btn bouton-or mt-3">
+            <i class="bi bi-book me-2"></i>Découvrir nos menus
+        </a>
+    </div>
+</section>
 
-<h2>Avis de nos clients</h2>
-{% if avis is empty %}
-    <p>Aucun avis pour le moment.</p>
-{% else %}
-    {% for a in avis %}
-        <div>
-            <strong>{{ a.utilisateur.prenom }} {{ a.utilisateur.nom }}</strong>
-            <span>{{ a.note }}/5 ⭐</span>
-            <p>{{ a.description }}</p>
+{#  AVIS CLIENTS  #}
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Avis de nos clients</h2>
+            <div class="separateur-or mx-auto mt-3"></div>
         </div>
-    {% endfor %}
-{% endif %}
+
+        {% if avis is empty %}
+            <p class="text-center" style="color: var(--couleur-texte-secondaire);">
+                Aucun avis pour le moment.
+            </p>
+        {% else %}
+            <div class="row g-4">
+                {% for a in avis %}
+                    <div class="col-md-4">
+                        <div class="carte-sombre p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <strong style="color: var(--couleur-principale);">
+                                    {{ a.utilisateur.prenom }} {{ a.utilisateur.nom }}
+                                </strong>
+                                <span style="color: var(--couleur-principale);">
+                                    {{ a.note }}/5 ⭐
+                                </span>
+                            </div>
+                            <p style="color: var(--couleur-texte-secondaire);">{{ a.description }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
 {% endblock %}

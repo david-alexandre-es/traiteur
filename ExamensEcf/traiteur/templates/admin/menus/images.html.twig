@@ -1,31 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Images du menu {{ menu.titre }}{% endblock %}
+{% block title %}Images du menu
+	{{ menu.titre }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/pages/admin.css') }}">
+{% endblock %}
 
 {% block body %}
-<h1>Images du menu : {{ menu.titre }}</h1>
+	<div
+		class="container py-5">
 
-<a href="{{ path('app_admin_menus') }}">← Retour aux menus</a>
+		{# Titre #}
+		<div class="mb-4">
+			<h1>Images —
+				{{ menu.titre }}</h1>
+			<div class="separateur-or mt-2"></div>
+		</div>
 
-<h2>Ajouter une image</h2>
-{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-    {{ form_row(form.imageFile) }}
-    <button type="submit">Ajouter</button>
-{{ form_end(form) }}
+		{# Ajouter une image #}
+		<div class="carte-sombre p-4 mb-5">
+			<h2 class="mb-4">Ajouter une image</h2>
+			{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+			{{ form_row(form.imageFile) }}
+			<button type="submit" class="btn bouton-or mt-3">
+				<i class="bi bi-upload me-2"></i>Ajouter
+			</button>
+			{{ form_end(form) }}
+		</div>
 
-<h2>Images actuelles</h2>
-{% if menu.images is empty %}
-    <p>Aucune image pour ce menu.</p>
-{% else %}
-    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-        {% for image in menu.images %}
-            <div>
-                <img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="Image menu" style="width: 200px; height: 150px; object-fit: cover;">
-                <form method="post" action="{{ path('app_admin_menu_image_supprimer', {id: image.id}) }}">
-                    <button type="submit" onclick="return confirm('Supprimer cette image ?')">Supprimer</button>
-                </form>
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
+		{# Images actuelles #}
+		<h2 class="mb-4">Images actuelles</h2>
+
+		{% if menu.images is empty %}
+			<p class="texte-vide">Aucune image pour ce menu.</p>
+		{% else %}
+			<div class="row g-3">
+				{% for image in menu.images %}
+					<div class="col-md-3 col-sm-6">
+						<div class="carte-sombre p-2 text-center">
+							<img src="{{ vich_uploader_asset(image, 'imageFile') }}" alt="Image menu" class="img-fluid image-menu mb-2">
+							<form method="post" action="{{ path('app_admin_menu_image_supprimer', {id: image.id}) }}">
+								<button type="submit" class="btn bouton-supprimer btn-sm w-100" onclick="return confirm('Supprimer cette image ?')">
+									<i class="bi bi-trash"></i>
+									Supprimer
+								</button>
+							</form>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		{# Retour #}
+		<a href="{{ path('app_admin_menus') }}" class="btn bouton-secondaire mt-4">
+			<i class="bi bi-arrow-left me-2"></i>Retour aux menus
+		</a>
+
+	</div>
 {% endblock %}

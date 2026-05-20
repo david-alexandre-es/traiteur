@@ -2,52 +2,101 @@
 
 {% block title %}Nos Menus{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/menus.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Nos Menus</h1>
+<div class="container py-5">
 
-{# Filtres #}
-<form method="get" action="{{ path('app_menus') }}">
-    <select name="theme">
-        <option value="">Tous les thèmes</option>
-        {% for theme in themes %}
-            <option value="{{ theme.id }}" {% if selectedTheme == theme.id ~ '' %}selected{% endif %}>
-                {{ theme.libelle }}
-            </option>
-        {% endfor %}
-    </select>
+    {# Titre #}
+    <div class="text-center mb-5">
+        <h1>Nos Menus</h1>
+        <div class="separateur-or mx-auto mt-3"></div>
+    </div>
 
-    <select name="regime">
-        <option value="">Tous les régimes</option>
-        {% for regime in regimes %}
-            <option value="{{ regime.id }}" {% if selectedRegime == regime.id ~ '' %}selected{% endif %}>
-                {{ regime.libelle }}
-            </option>
-        {% endfor %}
-    </select>
+    {# Filtres #}
+    <div class="carte-sombre p-4 mb-5">
+        <form method="get" action="{{ path('app_menus') }}">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Thème</label>
+                    <select name="theme" class="form-select">
+                        <option value="">Tous les thèmes</option>
+                        {% for theme in themes %}
+                            <option value="{{ theme.id }}" {% if selectedTheme == theme.id ~ '' %}selected{% endif %}>
+                                {{ theme.libelle }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Régime</label>
+                    <select name="regime" class="form-select">
+                        <option value="">Tous les régimes</option>
+                        {% for regime in regimes %}
+                            <option value="{{ regime.id }}" {% if selectedRegime == regime.id ~ '' %}selected{% endif %}>
+                                {{ regime.libelle }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn bouton-or w-100">
+                        <i class="bi bi-search me-2"></i>Filtrer
+                    </button>
+                    <a href="{{ path('app_menus') }}" class="btn bouton-secondaire w-100">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <button type="submit">Filtrer</button>
-    <a href="{{ path('app_menus') }}">Réinitialiser</a>
-</form>
-
-{# Liste des menus #}
-{% if menus is empty %}
-    <p>Aucun menu trouvé.</p>
-{% else %}
-    {% for menu in menus %}
-        <div>
-            <h2>{{ menu.titre }}</h2>
-            <p>{{ menu.description }}</p>
-            <p>Prix : {{ menu.prixParPersonne }} € / personne</p>
-            <p>Minimum : {{ menu.nombrePersonneMinimum }} personnes</p>
-            <p>Thème : {{ menu.theme.libelle }}</p>
-            <p>
-                Régimes :
-                {% for regime in menu.regimes %}
-                    {{ regime.libelle }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-            </p>
-            <a href="{{ path('app_menu_detail', {id: menu.id}) }}">Voir le détail</a>
+    {# Liste des menus #}
+    {% if menus is empty %}
+        <div class="text-center">
+            <p class="texte-secondaire">Aucun menu trouvé.</p>
         </div>
-    {% endfor %}
-{% endif %}
+    {% else %}
+        <div class="row g-4">
+            {% for menu in menus %}
+                <div class="col-md-4">
+                    <div class="carte-sombre p-4 h-100 d-flex flex-column">
+                        <h2 class="mb-2">{{ menu.titre }}</h2>
+                        <div class="separateur-or mb-3"></div>
+                        <p class="texte-secondaire mb-3">{{ menu.description }}</p>
+                        <div class="mb-2">
+                            <span class="texte-secondaire">Prix</span>
+                            <span class="prix-menu ms-2">{{ menu.prixParPersonne }} € / personne</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="texte-secondaire">Minimum</span>
+                            <span class="ms-2">{{ menu.nombrePersonneMinimum }} personnes</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="texte-secondaire">Thème</span>
+                            <span class="ms-2">{{ menu.theme.libelle }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="texte-secondaire">Régimes</span>
+                            <span class="ms-2">
+                                {% for regime in menu.regimes %}
+                                    {{ regime.libelle }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </span>
+                        </div>
+                        <div class="mt-auto">
+                            <a href="{{ path('app_menu_detail', {id: menu.id}) }}" class="btn bouton-or w-100">
+                                <i class="bi bi-eye me-2"></i>Voir le détail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
 {% endblock %}

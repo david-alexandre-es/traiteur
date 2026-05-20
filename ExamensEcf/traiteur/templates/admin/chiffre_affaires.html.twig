@@ -2,54 +2,95 @@
 
 {% block title %}Chiffre d'affaires{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/admin.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Chiffre d'affaires</h1>
+<div class="container py-5">
 
-<a href="{{ path('app_admin') }}">← Retour</a>
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Chiffre d'affaires</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-<form method="get" action="{{ path('app_admin_ca') }}">
-    <select name="menu">
-        <option value="">Tous les menus</option>
-        {% for menu in menus %}
-            <option value="{{ menu.id }}" {% if selectedMenu == menu.id ~ '' %}selected{% endif %}>
-                {{ menu.titre }}
-            </option>
-        {% endfor %}
-    </select>
+    {# Filtres #}
+    <div class="carte-sombre p-4 mb-4">
+        <form method="get" action="{{ path('app_admin_ca') }}">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Menu</label>
+                    <select name="menu" class="form-select">
+                        <option value="">Tous les menus</option>
+                        {% for menu in menus %}
+                            <option value="{{ menu.id }}" {% if selectedMenu == menu.id ~ '' %}selected{% endif %}>
+                                {{ menu.titre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Date début</label>
+                    <input type="date" name="date_debut" value="{{ dateDebut }}" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Date fin</label>
+                    <input type="date" name="date_fin" value="{{ dateFin }}" class="form-control">
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn bouton-or w-100">
+                        <i class="bi bi-search"></i> Filtrer
+                    </button>
+                    <a href="{{ path('app_admin_ca') }}" class="btn bouton-secondaire w-100">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <input type="date" name="date_debut" value="{{ dateDebut }}" placeholder="Date début">
-    <input type="date" name="date_fin" value="{{ dateFin }}" placeholder="Date fin">
+    {# Total #}
+    <div class="carte-sombre p-4 mb-4 text-center">
+        <p class="total-label">Total</p>
+        <h2 class="total-montant">{{ total|number_format(2, ',', ' ') }} €</h2>
+    </div>
 
-    <button type="submit">Filtrer</button>
-    <a href="{{ path('app_admin_ca') }}">Réinitialiser</a>
-</form>
+    {# Tableau #}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Menu</th>
+                    <th>Client</th>
+                    <th>Date commande</th>
+                    <th>Prix menu</th>
+                    <th>Livraison</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.numeroCommande }}</td>
+                    <td>{{ commande.menu.titre }}</td>
+                    <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
+                    <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
+                    <td>{{ commande.prixMenu }} €</td>
+                    <td>{{ commande.prixLivraison }} €</td>
+                    <td>{{ commande.prixMenu + commande.prixLivraison }} €</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-<h2>Total : {{ total|number_format(2, ',', ' ') }} €</h2>
+    {# Retour #}
+    <a href="{{ path('app_admin') }}" class="btn bouton-secondaire mt-3">
+        <i class="bi bi-arrow-left me-2"></i>Retour
+    </a>
 
-<table>
-    <thead>
-        <tr>
-            <th>Numéro</th>
-            <th>Menu</th>
-            <th>Client</th>
-            <th>Date commande</th>
-            <th>Prix menu</th>
-            <th>Livraison</th>
-            <th>Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for commande in commandes %}
-        <tr>
-            <td>{{ commande.numeroCommande }}</td>
-            <td>{{ commande.menu.titre }}</td>
-            <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
-            <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
-            <td>{{ commande.prixMenu }} €</td>
-            <td>{{ commande.prixLivraison }} €</td>
-            <td>{{ commande.prixMenu + commande.prixLivraison }} €</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+</div>
 {% endblock %}

@@ -2,13 +2,39 @@
 
 {% block title %}{{ titre }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/admin.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>{{ titre }}</h1>
+<div class="container py-5">
 
-{{ form_start(form) }}
-    {{ form_row(form.libelle) }}
-    <button type="submit">Enregistrer</button>
-{{ form_end(form) }}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>{{ titre }}</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-<a href="{{ path('app_admin_allergenes') }}">← Retour</a>
+    {# Formulaire #}
+    <div class="carte-sombre p-4">
+        {{ form_start(form) }}
+            <div class="row g-3">
+                <div class="col-md-6">
+                    {{ form_row(form.libelle) }}
+                </div>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn bouton-or">
+                    <i class="bi bi-check-lg me-2"></i>Enregistrer
+                </button>
+                <a href="{{ path('app_admin_allergenes') }}" class="btn bouton-secondaire">
+                    <i class="bi bi-arrow-left me-2"></i>Retour
+                </a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+</div>
 {% endblock %}

@@ -1,0 +1,84 @@
+/*  PAGES ADMIN  */
+
+/* Style pour les boutons d'action */
+.bouton-supprimer {
+    background-color: #6a2d2d;
+    color: #d59595;
+    border: 1px solid #6a2d2d;
+    border-radius: 0;
+    transition: all 0.3s;
+}
+
+/* Style pour les boutons d'action au survol */
+.bouton-supprimer:hover {
+    background-color: #8a3d3d;
+    color: #fff;
+}
+
+/* PAGES ADMIN IMAGES */
+
+/* texte aucune image */
+.texte-vide {
+    color: var(--couleur-texte-secondaire);
+}
+
+/* images du menu */
+.image-menu {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* PAGES UTILISATEURS */
+
+/* badges actif */
+.badge-actif {
+    background-color: #1e3a2f;
+    color: #95d5b2;
+    border: 1px solid #2d6a4f;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* badges inactif  */
+.badge-inactif {
+    background-color: #3a1e1e;
+    color: #d59595;
+    border: 1px solid #6a2d2d;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* PAGES CHIFFRES D'AFFAIRES */
+
+/* total chiffre affaires */
+.total-label {
+    color: var(--couleur-texte-secondaire);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.total-montant {
+    font-size: 2.5rem;
+    color: var(--couleur-principale);
+}
+
+/* PAGES BASE INDEX */
+
+/* cartes menu admin */
+.lien-admin {
+    text-decoration: none;
+    color: var(--couleur-texte);
+    transition: all 0.3s;
+}
+
+.lien-admin:hover {
+    color: var(--couleur-principale);
+}
+
+.icone-admin {
+    font-size: 2rem;
+    color: var(--couleur-principale);
+}

@@ -3,38 +3,88 @@
 {% block title %}Détail commande {{ commande.numeroCommande }}{% endblock %}
 
 {% block body %}
-<h1>Commande {{ commande.numeroCommande }}</h1>
+<div class="container py-5">
 
-<p><strong>Menu :</strong> {{ commande.menu.titre }}</p>
-<p><strong>Date prestation :</strong> {{ commande.datePrestation|date('d/m/Y') }}</p>
-<p><strong>Nombre de personnes :</strong> {{ commande.nombrePersonne }}</p>
-<p><strong>Prix menu :</strong> {{ commande.prixMenu }} €</p>
-<p><strong>Frais de livraison :</strong> {{ commande.prixLivraison }} €</p>
-<p><strong>Prix total :</strong> {{ commande.prixMenu + commande.prixLivraison }} €</p>
-<p><strong>Statut actuel :</strong> {{ commande.statut }}</p>
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Commande {{ commande.numeroCommande }}</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-<h2>Historique des statuts</h2>
+    {# Infos commande #}
+    <div class="row g-4 mb-5">
+        <div class="col-md-8">
+            <div class="carte-sombre p-4 h-100">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="texte-secondaire mb-1">Menu</p>
+                        <p class="mb-0">{{ commande.menu.titre }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="texte-secondaire mb-1">Date prestation</p>
+                        <p class="mb-0">{{ commande.datePrestation|date('d/m/Y') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="texte-secondaire mb-1">Nombre de personnes</p>
+                        <p class="mb-0">{{ commande.nombrePersonne }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="texte-secondaire mb-1">Statut actuel</p>
+                        <span class="badge-statut badge-{{ commande.statut }}">
+                            {{ commande.statut }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="carte-sombre p-4 h-100 text-center">
+                <p class="texte-secondaire mb-1">Prix menu</p>
+                <h3 class="mb-3">{{ commande.prixMenu }} €</h3>
+                <p class="texte-secondaire mb-1">Frais de livraison</p>
+                <h3 class="mb-3">{{ commande.prixLivraison }} €</h3>
+                <div class="separateur-or mx-auto mb-3"></div>
+                <p class="texte-secondaire mb-1">Prix total</p>
+                <h2 class="mb-0">{{ commande.prixMenu + commande.prixLivraison }} €</h2>
+            </div>
+        </div>
+    </div>
 
-{% if commande.commandeStatuts is empty %}
-    <p>Aucun historique disponible.</p>
-{% else %}
-    <table>
-        <thead>
-            <tr>
-                <th>Statut</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for statut in commande.commandeStatuts %}
-            <tr>
-                <td>{{ statut.statut }}</td>
-                <td>{{ statut.dateChangement|date('d/m/Y H:i') }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
+    {# Historique statuts #}
+    <h2 class="mb-3">Historique des statuts</h2>
+    {% if commande.commandeStatuts is empty %}
+        <div class="carte-sombre p-4 text-center">
+            <p class="texte-secondaire mb-0">Aucun historique disponible.</p>
+        </div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Statut</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for statut in commande.commandeStatuts %}
+                    <tr>
+                        <td>
+                            <span class="badge-statut badge-{{ statut.statut }}">
+                                {{ statut.statut }}
+                            </span>
+                        </td>
+                        <td>{{ statut.dateChangement|date('d/m/Y H:i') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 
-<a href="{{ path('app_suivi_commande') }}">Retour à mes commandes</a>
+    {# Retour #}
+    <a href="{{ path('app_suivi_commande') }}" class="btn bouton-secondaire mt-4">
+        <i class="bi bi-arrow-left me-2"></i>Retour à mes commandes
+    </a>
+
+</div>
 {% endblock %}

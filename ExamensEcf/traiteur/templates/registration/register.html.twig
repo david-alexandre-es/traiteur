@@ -3,20 +3,57 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-<h1>Créer un compte</h1>
+<div class="container py-5">
 
-{{ form_start(registrationForm) }}
-    {{ form_row(registrationForm.nom) }}
-    {{ form_row(registrationForm.prenom) }}
-    {{ form_row(registrationForm.email) }}
-    {{ form_row(registrationForm.telephone) }}
-    {{ form_row(registrationForm.adresse_postale) }}
-    {{ form_row(registrationForm.ville) }}
-    {{ form_row(registrationForm.pays) }}
-    {{ form_row(registrationForm.plainPassword) }}
+    {# Titre #}
+    <div class="text-center mb-5">
+        <h1>Créer un compte</h1>
+        <div class="separateur-or mx-auto mt-3"></div>
+    </div>
 
-    <button type="submit">S'inscrire</button>
-{{ form_end(registrationForm) }}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="carte-sombre p-4">
+                {{ form_start(registrationForm) }}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            {{ form_row(registrationForm.nom) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(registrationForm.prenom) }}
+                        </div>
+                        <div class="col-12">
+                            {{ form_row(registrationForm.email) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(registrationForm.telephone) }}
+                        </div>
+                        <div class="col-12">
+                            {{ form_row(registrationForm.adresse_postale) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(registrationForm.ville) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(registrationForm.pays) }}
+                        </div>
+                        <div class="col-12">
+                            {{ form_row(registrationForm.plainPassword) }}
+                        </div>
+                    </div>
 
-<a href="{{ path('app_login') }}">Déjà un compte ? Se connecter</a>
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <button type="submit" class="btn bouton-or">
+                            <i class="bi bi-person-plus me-2"></i>S'inscrire
+                        </button>
+                        <a href="{{ path('app_login') }}" class="texte-secondaire">
+                            Déjà un compte ? Se connecter
+                        </a>
+                    </div>
+                {{ form_end(registrationForm) }}
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

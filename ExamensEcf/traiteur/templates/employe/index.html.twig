@@ -2,54 +2,76 @@
 
 {% block title %}Espace Employé{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/employe.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Espace Employé</h1>
-<p>Bienvenue {{ app.user.prenom }} {{ app.user.nom }} !</p>
+<div class="container py-5">
 
-{% for message in app.flashes('success') %}
-    <div style="color: green">{{ message }}</div>
-{% endfor %}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Espace Employé</h1>
+        <div class="separateur-or mt-2"></div>
+        <p class="mt-2 texte-secondaire">
+            Bienvenue {{ app.user.prenom }} {{ app.user.nom }}
+        </p>
+    </div>
 
-<h2>Commandes à traiter</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Numéro</th>
-            <th>Client</th>
-            <th>Menu</th>
-            <th>Date prestation</th>
-            <th>Personnes</th>
-            <th>Statut</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for commande in commandes %}
-        <tr>
-            <td>{{ commande.numeroCommande }}</td>
-            <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
-            <td>{{ commande.menu.titre }}</td>
-            <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
-            <td>{{ commande.nombrePersonne }}</td>
-            <td>{{ commande.statut }}</td>
-            <td>
-                <form method="post" action="{{ path('app_employe_commande_statut', {id: commande.id}) }}">
-                    <select name="statut">
-    <option value="en_attente" {% if commande.statut == 'en_attente' %}selected{% endif %}>En attente</option>
-    <option value="acceptee" {% if commande.statut == 'acceptee' %}selected{% endif %}>Acceptée</option>
-    <option value="en_preparation" {% if commande.statut == 'en_preparation' %}selected{% endif %}>En préparation</option>
-    <option value="en_cours_de_livraison" {% if commande.statut == 'en_cours_de_livraison' %}selected{% endif %}>En cours de livraison</option>
-    <option value="livree" {% if commande.statut == 'livree' %}selected{% endif %}>Livrée</option>
-    <option value="en_attente_retour_materiel" {% if commande.statut == 'en_attente_retour_materiel' %}selected{% endif %}>En attente retour matériel</option>
-    <option value="terminee" {% if commande.statut == 'terminee' %}selected{% endif %}>Terminée</option>
-    <option value="annulee" {% if commande.statut == 'annulee' %}selected{% endif %}>Annulée</option>
-</select>
-                    <button type="submit">Mettre à jour</button>
-                    <a href="{{ path('app_employe_commande_annuler', {id: commande.id}) }}">Annuler</a>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    {# Tableau commandes #}
+    <h2 class="mb-3">Commandes à traiter</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Client</th>
+                    <th>Menu</th>
+                    <th>Date prestation</th>
+                    <th>Personnes</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.numeroCommande }}</td>
+                    <td>{{ commande.utilisateur.prenom }} {{ commande.utilisateur.nom }}</td>
+                    <td>{{ commande.menu.titre }}</td>
+                    <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
+                    <td>{{ commande.nombrePersonne }}</td>
+                    <td>
+                        <span class="badge-statut badge-{{ commande.statut }}">
+                            {{ commande.statut }}
+                        </span>
+                    </td>
+                    <td>
+                        <form method="post" action="{{ path('app_employe_commande_statut', {id: commande.id}) }}" class="d-inline-flex gap-1">
+                            <select name="statut" class="form-select form-select-sm">
+                                <option value="en_attente" {% if commande.statut == 'en_attente' %}selected{% endif %}>En attente</option>
+                                <option value="acceptee" {% if commande.statut == 'acceptee' %}selected{% endif %}>Acceptée</option>
+                                <option value="en_preparation" {% if commande.statut == 'en_preparation' %}selected{% endif %}>En préparation</option>
+                                <option value="en_cours_de_livraison" {% if commande.statut == 'en_cours_de_livraison' %}selected{% endif %}>En cours de livraison</option>
+                                <option value="livree" {% if commande.statut == 'livree' %}selected{% endif %}>Livrée</option>
+                                <option value="en_attente_retour_materiel" {% if commande.statut == 'en_attente_retour_materiel' %}selected{% endif %}>En attente retour matériel</option>
+                                <option value="terminee" {% if commande.statut == 'terminee' %}selected{% endif %}>Terminée</option>
+                                <option value="annulee" {% if commande.statut == 'annulee' %}selected{% endif %}>Annulée</option>
+                            </select>
+                            <button type="submit" class="btn bouton-or btn-sm">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
+                            <a href="{{ path('app_employe_commande_annuler', {id: commande.id}) }}" class="btn bouton-supprimer btn-sm">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
 {% endblock %}

@@ -2,36 +2,56 @@
 
 {% block title %}Gestion des allergènes{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/admin.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Gestion des allergènes</h1>
+<div class="container py-5">
 
-<a href="{{ path('app_admin_allergene_nouveau') }}">+ Nouvel allergène</a>
+    {# Titre #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Gestion des allergènes</h1>
+            <div class="separateur-or mt-2"></div>
+        </div>
+        <a href="{{ path('app_admin_allergene_nouveau') }}" class="btn bouton-or">
+            <i class="bi bi-plus-lg me-2"></i>Nouvel allergène
+        </a>
+    </div>
 
-{% for message in app.flashes('success') %}
-    <div style="color: green">{{ message }}</div>
-{% endfor %}
+    {# Tableau #}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for allergene in allergenes %}
+                <tr>
+                    <td>{{ allergene.libelle }}</td>
+                    <td>
+                        <form method="post" action="{{ path('app_admin_allergene_supprimer', {id: allergene.id}) }}" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ allergene.id) }}">
+                            <button type="submit" class="btn bouton-supprimer btn-sm" onclick="return confirm('Supprimer cet allergène ?')">
+                                <i class="bi bi-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for allergene in allergenes %}
-        <tr>
-            <td>{{ allergene.libelle }}</td>
-            <td>
-                <form method="post" action="{{ path('app_admin_allergene_supprimer', {id: allergene.id}) }}" style="display:inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ allergene.id) }}">
-                    <button type="submit" onclick="return confirm('Supprimer cet allergène ?')">Supprimer</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    {# Retour #}
+    <a href="{{ path('app_admin') }}" class="btn bouton-secondaire mt-3">
+        <i class="bi bi-arrow-left me-2"></i>Retour
+    </a>
 
-<a href="{{ path('app_admin') }}">← Retour</a>
+</div>
 {% endblock %}

@@ -3,63 +3,98 @@
 {% block title %}Mon Compte{% endblock %}
 
 {% block body %}
-<h1>Mon Compte</h1>
-<p>Bienvenue {{ app.user.prenom }} {{ app.user.nom }} !</p>
+<div class="container py-5">
 
-{% for message in app.flashes('success') %}
-    <div style="color: green">{{ message }}</div>
-{% endfor %}
+    {# Titre #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Mon Compte</h1>
+            <div class="separateur-or mt-2"></div>
+            <p class="mt-2 texte-secondaire">
+                Bienvenue {{ app.user.prenom }} {{ app.user.nom }}
+            </p>
+        </div>
+        <a href="{{ path('app_commander') }}" class="btn bouton-or">
+            <i class="bi bi-bag-plus me-2"></i>Passer une commande
+        </a>
+    </div>
 
-{% for message in app.flashes('error') %}
-    <div style="color: red">{{ message }}</div>
-{% endfor %}
+    {# Commandes #}
+    <h2 class="mb-3">Mes commandes</h2>
+    {% if commandes is empty %}
+        <div class="carte-sombre p-4 text-center">
+            <p class="texte-vide mb-0">Vous n'avez pas encore de commandes.</p>
+        </div>
+    {% else %}
+        <div class="table-responsive mb-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Menu</th>
+                        <th>Date prestation</th>
+                        <th>Personnes</th>
+                        <th>Prix total</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for commande in commandes %}
+                    <tr>
+                        <td>{{ commande.numeroCommande }}</td>
+                        <td>{{ commande.menu.titre }}</td>
+                        <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
+                        <td>{{ commande.nombrePersonne }}</td>
+                        <td>{{ commande.prixMenu + commande.prixLivraison }} €</td>
+                        <td>
+                            <span class="badge-statut badge-{{ commande.statut }}">
+                                {{ commande.statut }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if commande.statut == 'en_attente' %}
+                                <a href="{{ path('app_commande_modifier', {id: commande.id}) }}" class="btn bouton-secondaire btn-sm me-1">
+                                    <i class="bi bi-pencil"></i> Modifier
+                                </a>
+                                <form method="post" action="{{ path('app_commande_annuler', {id: commande.id}) }}" style="display:inline">
+                                    <button type="submit" class="btn bouton-supprimer btn-sm" onclick="return confirm('Annuler cette commande ?')">
+                                        <i class="bi bi-x-lg"></i> Annuler
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span class="texte-vide">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 
-<a href="{{ path('app_commander') }}">+ Passer une commande</a>
+    {# Liens rapides #}
+    <h2 class="mb-3">Mon espace</h2>
+    <div class="row g-3">
+        <div class="col-md-4">
+            <a href="{{ path('app_suivi_commande') }}" class="carte-sombre p-4 d-block text-center lien-admin">
+                <i class="bi bi-truck icone-admin"></i>
+                <p class="mt-2 mb-0">Suivi de mes commandes</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ path('app_avis_nouveau') }}" class="carte-sombre p-4 d-block text-center lien-admin">
+                <i class="bi bi-star icone-admin"></i>
+                <p class="mt-2 mb-0">Laisser un avis</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ path('app_profil') }}" class="carte-sombre p-4 d-block text-center lien-admin">
+                <i class="bi bi-person-gear icone-admin"></i>
+                <p class="mt-2 mb-0">Modifier mon profil</p>
+            </a>
+        </div>
+    </div>
 
-<h2>Mes commandes</h2>
-{% if commandes is empty %}
-    <p>Vous n'avez pas encore de commandes.</p>
-{% else %}
-    <table>
-        <thead>
-            <tr>
-                <th>Numéro</th>
-                <th>Menu</th>
-                <th>Date prestation</th>
-                <th>Personnes</th>
-                <th>Prix total</th>
-                <th>Statut</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for commande in commandes %}
-            <tr>
-                <td>{{ commande.numeroCommande }}</td>
-                <td>{{ commande.menu.titre }}</td>
-                <td>{{ commande.datePrestation|date('d/m/Y') }}</td>
-                <td>{{ commande.nombrePersonne }}</td>
-                <td>{{ commande.prixMenu + commande.prixLivraison }} €</td>
-                <td>{{ commande.statut }}</td>
-                <td>
-                    {% if commande.statut == 'en_attente' %}
-                        <a href="{{ path('app_commande_modifier', {id: commande.id}) }}">Modifier</a>
-                        <form method="post" action="{{ path('app_commande_annuler', {id: commande.id}) }}" style="display:inline">
-                            <button type="submit" onclick="return confirm('Annuler cette commande ?')">Annuler</button>
-                        </form>
-                    {% else %}
-                        -
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endif %}
-
-<ul>
-<li><a href="{{ path('app_suivi_commande') }}">Suivi de mes commandes</a></li>
-    <li><a href="{{ path('app_avis_nouveau') }}">Laisser un avis</a></li>
-    <li><a href="{{ path('app_profil') }}">Modifier mon profil</a></li>
-</ul>
+</div>
 {% endblock %}

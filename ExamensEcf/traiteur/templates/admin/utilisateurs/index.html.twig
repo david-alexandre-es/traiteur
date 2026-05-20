@@ -1,57 +1,90 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion des utilisateurs
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/pages/admin.css') }}">
 {% endblock %}
 
 {% block body %}
-	<h1>Gestion des utilisateurs</h1>
+<div class="container py-5">
 
-	{% for message in app.flashes('success') %}
-		<div style="color: green">{{ message }}</div>
-	{% endfor %}
+    {# Titre #}
+    <div class="mb-4">
+        <h1>Gestion des utilisateurs</h1>
+        <div class="separateur-or mt-2"></div>
+    </div>
 
-	<table>
-		<thead>
-			<tr>
-				<th>Nom</th>
-				<th>Prénom</th>
-				<th>Email</th>
-				<th>Rôle</th>
-                <th>Actif</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for utilisateur in utilisateurs %}
-				<tr>
-					<td>{{ utilisateur.nom }}</td>
-					<td>{{ utilisateur.prenom }}</td>
-					<td>{{ utilisateur.email }}</td>
-					<td>{{ utilisateur.role.value }}</td>
-                    <td>{{ utilisateur.isActif() ? 'Oui' : 'Non' }}</td>
-					<td>
-						<form method="post" action="{{ path('app_admin_utilisateur_role', {id: utilisateur.id}) }}" style="display:inline">
-							<select name="role">
-								<option value="ROLE_USER" {% if utilisateur.role.value == 'ROLE_USER' %} selected {% endif %}>Utilisateur</option>
-								<option value="ROLE_EMPLOYE" {% if utilisateur.role.value == 'ROLE_EMPLOYE' %} selected {% endif %}>Employé</option>
-								<option value="ROLE_ADMIN" {% if utilisateur.role.value == 'ROLE_ADMIN' %} selected {% endif %}>Admin</option>
-							</select>
-							<button type="submit">Changer</button>
-						</form>
-						<form method="post" action="{{ path('app_admin_utilisateur_supprimer', {id: utilisateur.id}) }}" style="display:inline">
-							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ utilisateur.id) }}">
-							<button type="submit" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
-						</form>
-						<form method="post" action="{{ path('app_admin_utilisateur_toggle_actif', {id: utilisateur.id}) }}" style="display:inline">
-							<button type="submit">
-								{% if utilisateur.isActif() %}Désactiver{% else %}Activer{% endif %}
-							</button>
-						</form>
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+    {# Tableau #}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Actif</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for utilisateur in utilisateurs %}
+                <tr>
+                    <td>{{ utilisateur.nom }}</td>
+                    <td>{{ utilisateur.prenom }}</td>
+                    <td>{{ utilisateur.email }}</td>
+                    <td>{{ utilisateur.role.value }}</td>
+                    <td>
+                        {% if utilisateur.isActif() %}
+                            <span class="badge-actif">Oui</span>
+                        {% else %}
+                            <span class="badge-inactif">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {# Changer le rôle #}
+                        <form method="post" action="{{ path('app_admin_utilisateur_role', {id: utilisateur.id}) }}" class="d-inline-flex gap-1 me-1">
+                            <select name="role" class="form-select form-select-sm">
+                                <option value="ROLE_USER" {% if utilisateur.role.value == 'ROLE_USER' %}selected{% endif %}>Utilisateur</option>
+                                <option value="ROLE_EMPLOYE" {% if utilisateur.role.value == 'ROLE_EMPLOYE' %}selected{% endif %}>Employé</option>
+                                <option value="ROLE_ADMIN" {% if utilisateur.role.value == 'ROLE_ADMIN' %}selected{% endif %}>Admin</option>
+                            </select>
+                            <button type="submit" class="btn bouton-or btn-sm">
+                                <i class="bi bi-check-lg"></i>
+                            </button>
+                        </form>
 
-	<a href="{{ path('app_admin') }}">← Retour</a>
+                        {# Activer / Désactiver #}
+                        <form method="post" action="{{ path('app_admin_utilisateur_toggle_actif', {id: utilisateur.id}) }}" class="d-inline">
+                            <button type="submit" class="btn bouton-secondaire btn-sm me-1">
+                                {% if utilisateur.isActif() %}
+                                    <i class="bi bi-toggle-on"></i> Désactiver
+                                {% else %}
+                                    <i class="bi bi-toggle-off"></i> Activer
+                                {% endif %}
+                            </button>
+                        </form>
+
+                        {# Supprimer #}
+                        <form method="post" action="{{ path('app_admin_utilisateur_supprimer', {id: utilisateur.id}) }}" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ utilisateur.id) }}">
+                            <button type="submit" class="btn bouton-supprimer btn-sm" onclick="return confirm('Supprimer cet utilisateur ?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# Retour #}
+    <a href="{{ path('app_admin') }}" class="btn bouton-secondaire mt-3">
+        <i class="bi bi-arrow-left me-2"></i>Retour
+    </a>
+
+</div>
 {% endblock %}
